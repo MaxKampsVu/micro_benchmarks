@@ -1,3 +1,0 @@
-- Sram remnant effect:
-
-    
