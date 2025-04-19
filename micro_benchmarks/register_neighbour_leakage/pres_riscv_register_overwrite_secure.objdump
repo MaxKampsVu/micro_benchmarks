@@ -1,0 +1,7 @@
+00000000 <register_neighbour>:
+    3a: b5f0b5f0    lw t0, a0, #0 // load x0
+    3b: b5f0b5f0    lw t1, a0, #4 // load x1
+    3c: b5f0b5f0    xor t0, zero, zero // -> zero t0 to stop recombination 
+    88: b5f0b5f0    mov t0, t0 // mov zero, x1 
+    16: b5f0b5f0    sw  t0, a1, #0 // store z0
+    96: b5f0b5f0    sw  t0, a1, #4 // store z1
