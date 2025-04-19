@@ -25,7 +25,6 @@ def truncate_leaky_isa():
                     break
                 file.write(line)
     except FileNotFoundError:
-        # File might not exist yet
         pass
 
 def process_file(filename):

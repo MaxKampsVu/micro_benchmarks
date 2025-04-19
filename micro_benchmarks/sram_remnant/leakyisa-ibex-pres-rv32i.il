@@ -20,6 +20,8 @@ w32 t0RemnantVal;
 w32 t1RemnantVal;
 w32 t2RemnantVal;
 
+// TODO: What happens when the address in the registers changes. Do we clear the remnant value? 
+
 macro leak_remnant(w32 adr, w32 val)
 {
     if (adr =name= t0)
