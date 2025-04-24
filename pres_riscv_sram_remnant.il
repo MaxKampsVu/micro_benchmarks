@@ -1,15 +1,16 @@
 include il "isa-ibex-rv32i.il"
 include il "micro_benchmarks/sram_remnant/leakyisa-ibex-pres-rv32i.il"
-include asm "micro_benchmarks/sram_remnant/pres_riscv_sram_remnant.objdump"
+include asm "micro_benchmarks/sram_remnant/pres_riscv_sram_remnant_secure.objdump"
 
 annotate sram_remnant
-    region mem w32 x[0:3]
-    region mem w32 z[0:3]
-    region mem w32 memory[0:9]
+    region mem w32 x[0:1]
+    region mem w32 y[0:1]
+    region mem w32 z[0:1]
     init a0 [x 0]
-    init a1 [z 0]
-    init a2 [memory 0]
+    init a1 [y 0]
+    init a2 [z 0]
     input sharing x
+    input sharing y
     output sharing z;
 
 ---

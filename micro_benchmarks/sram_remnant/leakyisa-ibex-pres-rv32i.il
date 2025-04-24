@@ -16,29 +16,12 @@ macro sw3_leak(w32 val, w32 adr, w32 ofs)
     // we assume stores do not leak
 }
 
-w32 t0RemnantVal;
-w32 t1RemnantVal;
-w32 t2RemnantVal;
-
-// TODO: What happens when the address in the registers changes. Do we clear the remnant value? 
+w32 remnantVal;
 
 macro leak_remnant(w32 adr, w32 val)
 {
-    if (adr =name= t0)
-    {
-        leak t0Remnant (val ^w32 t0RemnantVal);
-        t0RemnantVal <- val;
-    }
-    if (adr =name= t1)
-    {
-        leak t1Remnant (val ^w32 t1RemnantVal);
-        t1RemnantVal <- val;
-    }
-    if (adr =name= t2)
-    {
-        leak t2Remnant (val ^w32 t2RemnantVal);
-        t2RemnantVal <- val;
-    }
+    remnantVal <- val ^w32 remnantVal;
+    leak remnant (remnantVal);
 }
 
 

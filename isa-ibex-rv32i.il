@@ -66,4 +66,9 @@ macro mov2 (w32 dst, w32 adr)
     dst <- adr;
 }
 
+macro not1 (w32 adr)
+{
+    adr <- adr ^w32 (w32) 4294967295; // adr xor FFFFFFFF
+}
+
 
