@@ -20,8 +20,8 @@ w32 remnantVal;
 
 macro leak_remnant(w32 adr, w32 val)
 {
-    remnantVal <- val ^w32 remnantVal;
-    leak remnant (remnantVal);
+    leak remnant (val ^w32 remnantVal);
+    remnantVal <- val;
 }
 
 
