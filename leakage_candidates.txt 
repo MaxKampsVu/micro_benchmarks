@@ -3,7 +3,7 @@ Good candidates:
 - register/sram overwrite 
 - register neighbour leakage 
 - leakage of neighbouring sram cells (miracle)
-- leakage of operands in Instructions of the pipeline (miracle)
+- pipeline register overwrites: leakage of operands in Instructions of the pipeline (miracle)
 
 Bad candidates:
 - Different alignment access of memory (miracle)

@@ -1,0 +1,9 @@
+00000000 <sram_remnant>:
+    0: b5f0b5f0    nop 
+    4: b5f0b5f0    lw  t0, a0, #0 
+    8: b5f0b5f0    lw  t1, a0, #4 
+    12: b5f0b5f0   xor t0, t0, t0
+    16: b5f0b5f0   nop              // -> nop prevents pipeline leak between xor and and 
+    20: b5f0b5f0   and t1, t1, t1 
+    24: b5f0b5f0   lw  zero, a2, #0 
+    28: b5f0b5f0   lw  zero, a2, #4 

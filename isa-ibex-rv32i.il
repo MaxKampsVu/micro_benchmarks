@@ -71,4 +71,9 @@ macro not1 (w32 adr)
     adr <- adr ^w32 (w32) 4294967295; // adr xor FFFFFFFF
 }
 
+macro nop0 ()
+{
+    
+}
+
 
