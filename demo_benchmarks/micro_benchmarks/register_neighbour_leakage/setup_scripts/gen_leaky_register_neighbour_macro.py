@@ -53,7 +53,7 @@ def process_file(filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create leak macro for register matrix.")
-    parser.add_argument("filename", nargs='?', default=LEAKY_MATRIX_FILE, help="Path to the input text file")
+    parser.add_argument("filename", nargs='?', help="Path to the input text file")
     args = parser.parse_args()
     
     process_file(args.filename)
