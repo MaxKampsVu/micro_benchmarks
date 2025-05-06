@@ -34,16 +34,24 @@ if __name__ == "__main__":
         help="Flag to enable the sram overwrite effect (default: False)"
     )
 
+    
     parser.add_argument(
         "-r", 
         action="store_true", 
         help="Flag to enable the sram remnant effect (default: False)"
     )
 
+    parser.add_argument(
+        "-p",
+        type=int,
+        default=0,
+        help="Pipeline depth for the overwrite effect (default: 0)"
+    )
+
     args = parser.parse_args()
 
     # Create the leaky isa model based on flahs 
-    write_leaky_isa(args.oR, args.oS, args.r, LEAKY_ISA_PATH)
+    write_leaky_isa(args.oR, args.oS, args.r, args.p, LEAKY_ISA_PATH)
 
     with open(args.ilfile, 'r') as file:
         lines = file.readlines()

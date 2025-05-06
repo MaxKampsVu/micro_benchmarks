@@ -1,8 +1,8 @@
 include il "isa-ibex-rv32i.il"
 include il "leakyisa-ibex-pres-rv32i.il"
-include asm "micro_benchmarks/register_overwrite/rd-rd.objdump"
+include asm "micro_benchmarks/pipeline_overwrite/xor-xor-depth-2-cleared.objdump"
 
-annotate sram_remnant
+annotate pipeline_overwrite
     region mem w32 x[0:1]
     region mem w32 mem[0:1]
     region mem w32 z[0:1]
@@ -14,31 +14,31 @@ annotate sram_remnant
 
 ---
 addleakage:
-  target: sram_remnant;
+  target: pipeline_overwrite;
 
 print:
   kind: macrodef
-  target: sram_remnant
+  target: pipeline_overwrite
   verbosity: 1;
 
 inlinecall:
-  target: sram_remnant;
+  target: pipeline_overwrite;
 
 partialeval:
-  target: sram_remnant;
+  target: pipeline_overwrite;
 
 print:
   kind: evaltrace
-  target: sram_remnant
+  target: pipeline_overwrite
   verbosity: 1;
 
 infertaint:
   inputsAsPublic: true
   outputsAsPublic: true
   memoryAsPublicOut: true
-  target: sram_remnant;
+  target: pipeline_overwrite;
   
 check:
   kind: "NI"
-  target: sram_remnant;
+  target: pipeline_overwrite;
 ...

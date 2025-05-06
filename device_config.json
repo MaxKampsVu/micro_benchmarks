@@ -1,0 +1,15 @@
+{
+    "squadName": "Super hero squad",
+    "homeTown": "Metro City",
+    "formed": 2016,
+    "secretBase": "Super tower",
+    "active": true,
+    "remnant-effect": [
+      {
+        "ld-ld": true,
+        "st-st": true,
+        "ld-st": true,
+        "st-ld": true
+      }
+    ]
+}
