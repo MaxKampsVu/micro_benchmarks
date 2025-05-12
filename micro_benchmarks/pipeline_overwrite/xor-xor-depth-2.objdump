@@ -2,6 +2,7 @@
     0: b5f0b5f0    lw t0, a0, #0 // load x0
     4: b5f0b5f0    lw t1, a0, #4 // load x1
     8: b5f0b5f0    xor t2, t0, t0 // 
-    12: b5f0b5f0   xor t3, t1, t1 // -> causes recombination in the pipeline 
-    16: b5f0b5f0   lw  zero, a2, #0 
-    30: b5f0b5f0   lw  zero, a2, #4 
+    12: b5f0b5f0   nop // 
+    14: b5f0b5f0   xor t3, t1, t1 // -> causes recombination in the pipeline 
+    18: b5f0b5f0   lw  zero, a2, #0 
+    22: b5f0b5f0   lw  zero, a2, #4 

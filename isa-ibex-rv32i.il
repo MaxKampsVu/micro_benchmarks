@@ -36,6 +36,8 @@ w32 t6;
 mem [];
 
 /**** Instructions ****/
+
+
 macro xor3 (w32 rd, w32 rs1, w32 rs2)
 {
     rd <- rs1 ^w32 rs2;
@@ -44,6 +46,10 @@ macro xor3 (w32 rd, w32 rs1, w32 rs2)
 macro and3 (w32 rd, w32 rs1, w32 rs2)
 {
     rd <- rs1 &w32 rs2;
+}
+
+macro is0() {
+
 }
 
 macro nop()

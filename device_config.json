@@ -1,15 +1,28 @@
 {
-    "squadName": "Super hero squad",
-    "homeTown": "Metro City",
-    "formed": 2016,
-    "secretBase": "Super tower",
-    "active": true,
-    "remnant-effect": [
-      {
-        "ld-ld": true,
-        "st-st": true,
-        "ld-st": true,
-        "st-ld": true
-      }
-    ]
+    "register overwrite effect": {
+        "enabled": false
+    }, 
+    "sram overwrite effect": {
+        "enabled": false
+    },
+    "remnant effect": {
+        "enabled": false,
+        "parameters": 
+        {
+            "ld-ld": false,
+            "st-st": false,
+            "ld-st": false,
+            "st-ld": false
+        }
+    },
+    "pipeline overwrite effect": {
+        "enabled": true, 
+        "parameters": 
+        {
+            "depth": 3,
+            "cross operand leakage": false,
+            "cross operand target leakage": false, 
+            "adjacent leakage depth": 2
+        }
+    }
 }
