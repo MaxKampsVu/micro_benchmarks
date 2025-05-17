@@ -54,4 +54,5 @@ sram_overwrite_ld_ld_zero_st = f'''
 '''
 
 benchmarks = {"sram-overwrite-ld": sram_overwrite_ld_ld,
-              "sram-overwrite-ld-zero": sram_overwrite_ld_ld_zero_ld}
+              "sram-overwrite-ld-zero": sram_overwrite_ld_ld_zero_ld,
+              "sram-overwrite-st-zero": sram_overwrite_ld_ld_zero_st}
