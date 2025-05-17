@@ -10,7 +10,7 @@ zero =       "%8"
 zero_mem =   "%9"
 
 B_NUM_SAMPLES = 1000
-B_NUM_TRACES = 5000
+B_NUM_TRACES = 500
 
 sram_overwrite_ld_ld = f'''
 "nop\\n"
@@ -21,7 +21,7 @@ sram_overwrite_ld_ld = f'''
 "ldr {regB}, [{share1_mem}]\\n"
 "nop\\n"
 : "r=" (regA), "r=" (regB), "r=" (regC), "r=" (regD)
-: "r" (share0), "r" (share1), "r" (&share1), "r" (&share2), "r" (zero), "r" (&zero)
+: "r" (share0), "r" (share1), "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
 :
 '''
 
@@ -35,7 +35,7 @@ sram_overwrite_ld_ld_zero_ld = f'''
 "ldr {regC}, [{share1_mem}]\\n"
 "nop\\n"
 : "r=" (regA), "r=" (regB), "r=" (regC), "r=" (regD)
-: "r" (share0), "r" (share1), "r" (&share1), "r" (&share2), "r" (zero), "r" (&zero)
+: "r" (share0), "r" (share1), "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
 :
 '''
 
@@ -49,7 +49,7 @@ sram_overwrite_ld_ld_zero_st = f'''
 "ldr {regC}, [{share1_mem}]\\n"
 "nop\\n"
 : "r=" (regA), "r=" (regB), "r=" (regC), "r=" (regD)
-: "r" (share0), "r" (share1), "r" (&share1), "r" (&share2), "r" (zero), "r" (&zero)
+: "r" (share0), "r" (share1), "r" (&share0), "r" (&share1)‚, "r" (zero), "r" (&zero)
 :
 '''
 
