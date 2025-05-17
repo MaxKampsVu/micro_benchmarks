@@ -60,7 +60,7 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
     }
 
     volatile uint32_t random = 0;
-    volatile uint32_t target0, target1, target2, target3;
+    volatile uint32_t regA, regB, regC, regD;
     volatile uint32_t zero = (uint32_t) 0;
     volatile uint32_t one = (uint32_t) 1;
     volatile uint32_t share0 = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
