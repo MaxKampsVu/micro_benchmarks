@@ -4,14 +4,7 @@ from tqdm import trange
 
 HammingWeightFn = lambda x: bin(x).count('1')
 
-traces = np.load('trace_files/traces.npy')
-textins = np.load('trace_files/textins.npy')
-
-num_traces = np.shape(traces)[0]
-num_samples = np.shape(traces)[1]
-
-
-def calculate_hypothetical_power():
+def calculate_hypothetical_power(textins, num_traces):
     print("Calculating hypothetical power...")
     hypothetical_power = np.zeros(num_traces)
     for trace_index in range(0, num_traces):
@@ -21,22 +14,22 @@ def calculate_hypothetical_power():
     return hypothetical_power
 
 
-def calculate_power():
+def calculate_power(traces, num_traces, num_samples):
     print("Calculating mean power for samples...")
     power = np.zeros(num_samples)
     for sample in range(0, num_samples):
-        T_j_list = np.zeros(num_traces + 1)
+        T_j_list = np.zeros(num_traces)
         for trace_index in range(0, num_traces):
             T_j_list[trace_index] = traces[trace_index][sample]
         power[sample] = np.mean(T_j_list, dtype=np.float64)
     return power
 
 
-def calculate_correlation():
-    H_list = calculate_hypothetical_power()
+def calculate_correlation(traces, textins, num_traces, num_samples):
+    H_list = calculate_hypothetical_power(textins, num_traces)
     H_mean = np.mean(H_list, dtype=np.float64)
 
-    mean_samples = calculate_power()
+    mean_samples = calculate_power(traces, num_traces, num_samples)
 
     correlations = np.zeros(num_samples)
 
@@ -52,18 +45,20 @@ def calculate_correlation():
             sum_d2 += np.power(traces[trace_index][sample] - mean_samples[sample], 2)
         sqrt_d = np.sqrt(sum_d1 * sum_d2)
 
-        correlations[sample] = sum_q / sqrt_d
+        correlations[sample] = sum_q / sqrt_d if sqrt_d != 0 else 0  # avoid division by zero
     return correlations
 
 
 def correlate(benchmark_name, target_dir):
-    cor = calculate_correlation()
+    traces = np.load('trace_files/traces.npy')
+    textins = np.load('trace_files/textins.npy')
+    num_traces = np.shape(traces)[0]
+    num_samples = np.shape(traces)[1]
+
+    cor = calculate_correlation(traces, textins, num_traces, num_samples)
 
     plt.plot(cor)
     plt.title(f"{benchmark_name}")
-
-    plt.text(0.5, 1.02, f"traces = {num_traces}, samples = {num_samples}",
-             transform=plt.gca().transAxes, ha='center', fontsize=10)
 
     plt.xlabel("sample")
     plt.ylabel("correlation")

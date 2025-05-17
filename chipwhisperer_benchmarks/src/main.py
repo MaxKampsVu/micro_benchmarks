@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 import shutil
-from benchmark_asm import benchmarks
+from benchmark_asm import benchmarks, B_NUM_SAMPLES, B_NUM_TRACES
 import pipeline
 BENCHMARK_PLOT_DIR = "benchmark_plots"
 BENCHMARK_FILE = "benchmark_asm.py"
@@ -18,6 +18,8 @@ if __name__ == "__main__":
     shutil.copy(BENCHMARK_FILE, dir_path)
     print(f"Copied '{BENCHMARK_FILE}' to directory '{dir_path}'")
 
+    NUM_SAMPLES = B_NUM_SAMPLES
+    NUM_TRACES = B_NUM_TRACES
     for i, (name, asm) in enumerate(benchmarks.items()):
         print(f"Executing benchmark: {i+1}/{len(benchmarks)}")
         try:

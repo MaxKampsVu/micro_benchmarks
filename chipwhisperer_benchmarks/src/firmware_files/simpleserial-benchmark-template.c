@@ -1,9 +1,14 @@
+
 #include <stdint.h>
 #include <stdlib.h> // Required for malloc/free if used, but we'll use stack buffers
 
 // Include HAL and SimpleSerial headers
 #include "hal.h"
 #include "simpleserial.h"
+
+uint32_t rand_uint32() {
+    return ((uint32_t)rand() << 16) | ((uint32_t)rand() & 0xFFFF);
+}
 
 // Helper function to convert a single hex character to its integer value
 static uint8_t hex_to_int(char c) {
@@ -48,10 +53,15 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
         return 1; 
     }
 
-    uint32_t zero, share0, share1;
+    uint32_t zero, one, random;
+    uint32_t share0, share1;
     uint32_t result;
 
     zero = (uint32_t)0;
+    one = (uint32_t)1;
+    random = rand_uint32();
+
+
     share0 = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
     share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6] << 8 | data[7];
 
@@ -63,19 +73,20 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
     
     // Microbenchmark
     asm volatile (
-        "nop\n"
-        "nop\n"
-        "nop\n"
-        "nop\n"
-        "str %2, [%0]\n"
-        "str %1, [%0]\n"
-        "nop\n"
-        "nop\n"
-        :
-	    : "r" (share0), "r" (share1), "r" (zero)
-        :
-	);
-
+		
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"str %1, [%0]\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		: 
+		: "r" (&share0), "r" (share1)
+		:
+    );
+    
+    // --- End of power trace capture ---
     trigger_low();
 
     uint8_t result_buf[4];
@@ -108,4 +119,3 @@ int main(void) {
 
     return 0;
 }
-

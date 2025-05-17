@@ -1,7 +1,7 @@
 import subprocess
 
 MAKEFILE_PATH = "firmware_files"
-FIRMWARE_FILE_PATH = "firmware_files/test.c"
+FIRMWARE_FILE_PATH = f"{MAKEFILE_PATH}/simpleserial-benchmark-template.c"
 
 TEMPLATE_FIRST_HALF = """
 #include <stdint.h>
@@ -10,6 +10,10 @@ TEMPLATE_FIRST_HALF = """
 // Include HAL and SimpleSerial headers
 #include "hal.h"
 #include "simpleserial.h"
+
+uint32_t rand_uint32() {
+    return ((uint32_t)rand() << 16) | ((uint32_t)rand() & 0xFFFF);
+}
 
 // Helper function to convert a single hex character to its integer value
 static uint8_t hex_to_int(char c) {
@@ -54,10 +58,15 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
         return 1; 
     }
 
-    uint32_t zero, share0, share1;
+    uint32_t zero, one, random;
+    uint32_t share0, share1;
     uint32_t result;
 
     zero = (uint32_t)0;
+    one = (uint32_t)1;
+    random = rand_uint32();
+
+
     share0 = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
     share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6] << 8 | data[7];
 
@@ -116,7 +125,6 @@ def create_firmware(microbenchmark_asm):
         firmware_str = TEMPLATE_FIRST_HALF + indented_asm + TEMPLATE_SECOND_HALF
         f.write(firmware_str)
 
-    subprocess.run(["make", "-C", MAKEFILE_PATH])
-
-
-create_firmware("test")
+    subprocess.run(["make", "-C", MAKEFILE_PATH],
+               stdout=subprocess.DEVNULL,
+               stderr=subprocess.DEVNULL)
