@@ -1,4 +1,10 @@
 chipwhisperer_profiling/src/benchmark_plots/
-chipwhisperer_profiling/src/firmware_files/
-chipwhisperer_profiling/src/trace_files/
 
+*.npy
+*.bin 
+*.eep
+*.elf 
+*.hex 
+*.lss
+*.map 
+*.sym
