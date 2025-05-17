@@ -3,6 +3,10 @@ CROSS_OP_LEAK = None
 CROSS_OP_TARGET_LEAK = None 
 ADJ_DEPTH = None 
 
+# TODO: Leak everything
+# TODO: nop instruction does not clear (only something like xor-xor)
+# TODO: sw leaks dst, adr, offset  
+
 def macro_from_json(pipeline_config):
     global DEPTH, CROSS_OP_LEAK, CROSS_OP_TARGET_LEAK, ADJ_DEPTH
 
@@ -29,7 +33,7 @@ def gen_pipeline_macro():
 
     return (
         f"{stage_variables_str}\n"
-        "macro leak_pipeline(w32 OpANew, w32 OpBNew, w32 resultNew)\n"
+        "macro leak_pipeline(w32 resultNew, w32 OpANew, w32 OpBNew)\n"
         "{\n"
         f"{stage_shift_str}" 
         f"{leak_str}"

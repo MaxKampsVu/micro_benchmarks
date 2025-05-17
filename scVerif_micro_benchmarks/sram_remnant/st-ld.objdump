@@ -1,0 +1,8 @@
+// Load after store remnant leak of x
+00000000 <micro_benchmark>:
+    0: b5f0b5f0   is
+    4: b5f0b5f0   sw  t1, a0, #0   // sw at location for x0
+    8: b5f0b5f0   nop
+    12: b5f0b5f0  lw  t2, a0, #4   // load x1 -> remnant leak
+    16: b5f0b5f0  lw  zero, a2, #0 
+    20: b5f0b5f0  lw  zero, a2, #4 

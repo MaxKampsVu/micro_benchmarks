@@ -1,7 +1,0 @@
-00000000 <register_overwrite>:
-    0: b5f0b5f0    lw t0, a0, #0 // load x0
-    4: b5f0b5f0    lw t0, a0, #0 // load x0
-    3b: b5f0b5f0    lw t1, a0, #4 // load x1
-    88: b5f0b5f0    mov t0, t1 // mov x0, x1 -> Recombine shares 
-    16: b5f0b5f0    sw  t0, a1, #0 // store z0
-    96: b5f0b5f0    sw  t0, a1, #4 // store z1

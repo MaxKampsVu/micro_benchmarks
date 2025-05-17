@@ -9,6 +9,12 @@ LD_ST_ID = 3
 ST_ID = 0
 LD_ID = 1
 
+# TODO: Meetings at 11, skip next meeting 20 May
+
+# TODO: sw leaks adr (what we want to write to memory)
+# TODO: ld-ld is only cleared by ld 
+# TODO: ld-st is only cleared by ld and st (same for st-ld)
+# TODO: st-st is only cleared by st
 
 def macro_from_json(remnant_config):
     macros_str = ""
@@ -46,31 +52,31 @@ def gen_remnant_macro(ID):
     return (
         f"w32 remnantVal_{mem_op_name};\n"
         f"w32 lastInstructionId_{mem_op_name};\n\n"
-        f"// Leak remant for sequence: {mem_op_name}\n"
-        f"macro leak_remnant_{mem_op_name}(w32 adr, w32 val, w32 currentInstructionId)\n"
+        f"// Leak remnant for sequence: {mem_op_name}\n"
+        f"macro leak_remnant_{mem_op_name}(w32 newVal, w32 currentInstructionId)\n"
         "{\n"
         f"   if (lastInstructionId_{mem_op_name} == (w32) {op_last_id}) \n"
         "   {\n"
         f"      if (currentInstructionId == (w32) {op_current_id}) \n"
         "      {\n"
-        f"         leak remnant (val ^w32 remnantVal_{mem_op_name});\n"
+        f"         leak remnant (newVal ^w32 remnantVal_{mem_op_name});\n"
         "      }\n"
         "   }\n"
         f"   lastInstructionId_{mem_op_name} <- currentInstructionId;\n"
-        f"   remnantVal_{mem_op_name} <- val;\n"
+        f"   remnantVal_{mem_op_name} <- newVal;\n"
         "}\n"
     )
 
 def trigger_from_json(remnant_config, is_ld):
     trigger_str = ""
     if remnant_config["ld-ld"]: 
-        trigger_str += f"   leak_remnant_{LD_LD}(adr, val, (w32) {int(is_ld)});\n"
+        trigger_str += f"   leak_remnant_{LD_LD}(remnantVal, (w32) {int(is_ld)});\n"
     if remnant_config["st-st"]: 
-        trigger_str += f"   leak_remnant_{ST_ST}(adr, val, (w32) {int(is_ld)});\n"
+        trigger_str += f"   leak_remnant_{ST_ST}(remnantVal, (w32) {int(is_ld)});\n"
     if remnant_config["st-ld"]: 
-        trigger_str += f"   leak_remnant_{ST_LD}(adr, val, (w32) {int(is_ld)});\n"
+        trigger_str += f"   leak_remnant_{ST_LD}(remnantVal, (w32) {int(is_ld)});\n"
     if remnant_config["ld-st"]: 
-        trigger_str += f"   leak_remnant_{LD_ST}(adr, val, (w32) {int(is_ld)});\n"
+        trigger_str += f"   leak_remnant_{LD_ST}(remnantVal, (w32) {int(is_ld)});\n"
     return trigger_str
 
 def ld_trigger_from_json(remnant_config):

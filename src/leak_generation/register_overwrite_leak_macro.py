@@ -1,4 +1,4 @@
-def macro_from_json(register_overwrite_configg):
+def macro_from_json(register_overwrite_config):
     return (
         "macro leak_register_overwrite(w32 dst, w32 adr)\n"
         "{\n"

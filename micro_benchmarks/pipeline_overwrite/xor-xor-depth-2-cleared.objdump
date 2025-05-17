@@ -1,8 +1,0 @@
-00000000 <pipeline_overwrite>:
-    0: b5f0b5f0    lw t0, a0, #0 // load x0
-    4: b5f0b5f0    lw t1, a0, #4 // load x1
-    8: b5f0b5f0    xor t2, t0, t0 // 
-    12: b5f0b5f0   xor t3, a1, a1 // clear the depency  
-    16: b5f0b5f0   xor t4, t1, t1 // -> avoid recombination
-    20: b5f0b5f0   lw  zero, a2, #0 
-    24: b5f0b5f0   lw  zero, a2, #4 

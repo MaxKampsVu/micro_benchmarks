@@ -1,0 +1,9 @@
+// Register overwrite leak of x
+00000000 <micro_benchmark>:
+    0: b5f0b5f0   is
+    4: b5f0b5f0   lw t1, a0, #0   // load x0
+    8: b5f0b5f0   sw t3, a2, #0 // store z0 -> to avoid remnant leak
+    12: b5f0b5f0  lw t4, a2, #4 // load z0 -> to avoid remnant leak
+    16: b5f0b5f0  lw t1, a0, #4 // load x1 into register of x0 -> register overwrite leak
+    20: b5f0b5f0  lw  zero, a2, #0 
+    24: b5f0b5f0  lw  zero, a2, #4 

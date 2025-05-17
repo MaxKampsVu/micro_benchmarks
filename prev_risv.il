@@ -1,6 +1,6 @@
 include il "isa-ibex-rv32i.il"
 include il "leakyisa-ibex-pres-rv32i.il"
-include asm "micro_benchmarks/sram_remnant/ld-ld.objdump"
+include asm "micro_benchmarks/sram_remnant/st-st.objdump"
 
 annotate micro_benchmark
     region mem w32 x[0:1]
