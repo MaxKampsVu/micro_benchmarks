@@ -76,9 +76,9 @@
   57              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 hal.c
-     /tmp/ccWiLHeV.s:16     .text.led_ok:0000000000000000 $t
-     /tmp/ccWiLHeV.s:24     .text.led_ok:0000000000000000 led_ok
-     /tmp/ccWiLHeV.s:39     .text.led_error:0000000000000000 $t
-     /tmp/ccWiLHeV.s:46     .text.led_error:0000000000000000 led_error
+     /tmp/ccrS4QKL.s:16     .text.led_ok:0000000000000000 $t
+     /tmp/ccrS4QKL.s:24     .text.led_ok:0000000000000000 led_ok
+     /tmp/ccrS4QKL.s:39     .text.led_error:0000000000000000 $t
+     /tmp/ccrS4QKL.s:46     .text.led_error:0000000000000000 led_error
 
 NO UNDEFINED SYMBOLS

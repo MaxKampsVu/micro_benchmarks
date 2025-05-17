@@ -44,6 +44,7 @@ static void uint32_to_hex(uint32_t val, uint8_t* hex_buf) {
 }
 
 
+
 // SimpleSerial command handler for 'p' (process/plain) command
 // Input 'data' contains 16 hex characters (8 bytes total)
 // representing r0 (first 8 chars) and share0 (next 8 chars).
@@ -53,20 +54,12 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
         return 1; 
     }
 
-    uint32_t zero, one, random;
-    uint32_t share0, share1;
-    uint32_t result;
-
-    zero = (uint32_t)0;
-    one = (uint32_t)1;
-    random = rand_uint32();
-
-
-    share0 = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
-    share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6] << 8 | data[7];
-
-    uint32_t target0, target1, target2;
-
+    volatile uint32_t random = 0;
+    volatile uint32_t target0, target1, target2, target3;
+    volatile uint32_t zero = (uint32_t) 0;
+    volatile uint32_t one = (uint32_t) 1;
+    volatile uint32_t share0 = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
+    volatile uint32_t share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6] << 8 | data[7];
 
     // --- Start of power trace capture ---
     trigger_high();
@@ -76,13 +69,14 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
 		
 		"nop\n"
 		"nop\n"
+		"ldr %0, [%4]\n"
 		"nop\n"
-		"str %1, [%0]\n"
+		"ldr %1, [%7]\n"
 		"nop\n"
+		"ldr %2, [%5]\n"
 		"nop\n"
-		"nop\n"
-		: 
-		: "r" (&share0), "r" (share1)
+		: "r=" (target0), "r=" (target1), "r=" (target2), "r=" (target3)
+		: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero), "r" (&random)
 		:
     );
     

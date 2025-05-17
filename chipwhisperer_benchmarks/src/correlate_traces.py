@@ -65,3 +65,4 @@ def correlate(benchmark_name, target_dir):
 
     save_path = f"{target_dir}/{benchmark_name}.png"
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.clf()   
