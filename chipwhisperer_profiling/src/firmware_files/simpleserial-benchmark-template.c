@@ -54,30 +54,38 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
         return 1; 
     }
 
-    volatile uint32_t random = 0;
-    volatile uint32_t target0, target1, target2, target3;
-    volatile uint32_t zero = (uint32_t) 0;
-    volatile uint32_t one = (uint32_t) 1;
-    volatile uint32_t share0 = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
+    volatile uint32_t share0  = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[2] << 8 | data[3];
     volatile uint32_t share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6] << 8 | data[7];
-
+    volatile register uint32_t regA   asm("r1"); 
+    volatile register uint32_t regB   asm("r2"); 
+    volatile register uint32_t regC   asm("r3"); 
+    volatile register uint32_t regD   asm("r4"); 
+    volatile uint32_t zero = (uint32_t) 0;
     // --- Start of power trace capture ---
     trigger_high();
     
     // Microbenchmark
     asm volatile (
 		
-		"nop\n"
-		"nop\n"
+		
+		"ldr %2, [%7]\n"
 		"ldr %0, [%4]\n"
+		"ldr %2, [%7]\n"
 		"nop\n"
-		"ldr %1, [%7]\n"
 		"nop\n"
-		"ldr %2, [%5]\n"
 		"nop\n"
-		: "r=" (target0), "r=" (target1), "r=" (target2), "r=" (target3)
-		: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero), "r" (&random)
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"str %6, [%5]\n"
+		"str %0, [%5]\n"
+		
+		: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD)
+		: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
 		:
+		
     );
     
     // --- End of power trace capture ---

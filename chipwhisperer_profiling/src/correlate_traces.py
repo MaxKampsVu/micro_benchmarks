@@ -57,12 +57,14 @@ def correlate(benchmark_name, target_dir):
 
     cor = calculate_correlation(traces, textins, num_traces, num_samples)
 
+    plt.ylim(-1, 1)
     plt.plot(cor)
     plt.title(f"{benchmark_name}")
 
     plt.xlabel("sample")
     plt.ylabel("correlation")
 
+
     save_path = f"{target_dir}/{benchmark_name}.png"
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    plt.clf()   
+    plt.clf()
