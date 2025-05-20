@@ -1,10 +1,11 @@
-include il "isa-ibex-rv32i.il"
-include il "leakyisa-ibex-pres-rv32i.il"
-include asm "micro_benchmarks/sram_remnant/st-st.objdump"
+include il "../scVerif_files/isa-ibex-rv32i.il"
+include il "../scVerif_files/leakyisa-ibex-pres-rv32i.il"
+include asm "../scVerif_micro_benchmarks/sram_remnant/st-st.objdump"
 
 annotate micro_benchmark
     region mem w32 x[0:1]
     region mem w32 mem[0:1]
+    region mem w32 zero_mem[0:0]
     region mem w32 z[0:1]
     init a0 [x 0]
     init a1 [mem 0]
@@ -37,7 +38,7 @@ infertaint:
   outputsAsPublic: true
   memoryAsPublicOut: true
   target: micro_benchmark;
-  
+
 check:
   kind: "NI"
   target: micro_benchmark;

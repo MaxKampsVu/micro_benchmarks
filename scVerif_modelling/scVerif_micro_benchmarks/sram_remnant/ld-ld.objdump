@@ -1,0 +1,7 @@
+00000000 <micro_benchmark>:
+    0: b5f0b5f0: is                        // init leakage effects state
+    4: b5f0b5f0: ldr r1, r0, #0            // init zero_mem with 0
+    8: b5f0b5f0: mov r0, zero              // init register r0 with 0
+    12: b5f0b5f0: ldr r3, zero_mem, #0
+    16: b5f0b5f0: ldr r1, a0, #0           // access x0 in memory
+    20: b5f0b5f0: ldr r3, zero_mem, #0

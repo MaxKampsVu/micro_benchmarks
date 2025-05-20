@@ -6,23 +6,23 @@
         "enabled": false
     },
     "remnant effect": {
-        "enabled": true,
+        "enabled": false,
         "parameters": 
         {
-            "ld-ld": false,
-            "ld-st": false,
-            "st-ld": false,
+            "ld-ld": true,
+            "ld-st": true,
+            "st-ld": true,
             "st-st": true
         }
     },
     "pipeline overwrite effect": {
-        "enabled": false, 
+        "enabled": true,
         "parameters": 
         {
-            "depth": 2,
+            "depth": 3,
             "cross operand leakage": false,
             "cross operand target leakage": false, 
-            "adjacent leakage depth": 2
+            "adjacent leakage depth": 1
         }
     }
 }

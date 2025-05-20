@@ -102,6 +102,8 @@ sram_remnant_st_ld_zero_st = f'''
 {operands}
 '''
 
+print(sram_remnant_st_ld_zero_st)
+
 sram_remnant_ld_st_zero_ld = f'''
 {secure_load_share1}
 {nop_slide}

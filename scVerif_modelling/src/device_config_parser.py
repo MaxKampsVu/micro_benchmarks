@@ -3,7 +3,7 @@ import json
 import leak_generation.remnant_leak_macro as remnant_gen
 import leak_generation.pipeline_overwrite_leak_macro as pipeline_gen
 
-file_path = "/Users/maximiliankamps/Desktop/Gadgets-Tools/micro-benchmarks/device_config.json"
+file_path = "/device_config.json"
 
 file = open(file_path, 'r')
 
