@@ -10,8 +10,21 @@ NUM_TRACES = 0
 
 
 if __name__ == "__main__":
+    device_name = "STMF32F303" 
+
+    banner = f"""
+ ▗▄▄▖▗▖ ▗▖    ▗▖  ▗▖▗▄▄▄▖ ▗▄▄▖▗▄▄▖  ▗▄▖     ▗▄▄▖ ▗▄▄▖  ▗▄▖ ▗▄▄▄▖▗▄▄▄▖▗▖   ▗▄▄▄▖▗▄▄▖ 
+▐▌   ▐▌ ▐▌    ▐▛▚▞▜▌  █  ▐▌   ▐▌ ▐▌▐▌ ▐▌    ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌     █  ▐▌   ▐▌   ▐▌ ▐▌
+▐▌   ▐▌ ▐▌    ▐▌  ▐▌  █  ▐▌   ▐▛▀▚▖▐▌ ▐▌    ▐▛▀▘ ▐▛▀▚▖▐▌ ▐▌▐▛▀▀▘  █  ▐▌   ▐▛▀▀▘▐▛▀▚▖
+▝▚▄▄▖▐▙█▟▌    ▐▌  ▐▌▗▄█▄▖▝▚▄▄▖▐▌ ▐▌▝▚▄▞▘    ▐▌   ▐▌ ▐▌▝▚▄▞▘▐▌   ▗▄█▄▖▐▙▄▄▖▐▙▄▄▖▐▌ ▐▌                                                                                                 
+"""
+    print(banner)  
+
+    print(f"Starting microbenchmark profiling for device: {device_name}")                             
+                                                     
+
     timestamp = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-    dir_path = f"{BENCHMARK_PLOT_DIR}/benchmark_{timestamp}"
+    dir_path = f"{BENCHMARK_PLOT_DIR}/{device_name}_{timestamp}"
     os.makedirs(dir_path, exist_ok=True)
     print(f"Directory created: {dir_path}")
 
@@ -20,11 +33,16 @@ if __name__ == "__main__":
 
     NUM_SAMPLES = B_NUM_SAMPLES
     NUM_TRACES = B_NUM_TRACES
+
+    benchmarks_failed = 0
     for i, (name, asm) in enumerate(benchmarks.items()):
         print(f"Executing benchmark: {i+1}/{len(benchmarks)}")
         try:
             pipeline.process(NUM_TRACES, NUM_SAMPLES, asm, name, dir_path)
             print(f"Benchmark '{name}' was successful!")
         except Exception as e:
+            benchmarks_failed += 1
             print(f"Benchmark '{name}' failed!")
+
+    print(f"{benchmarks_failed} benchmarks failed")
 

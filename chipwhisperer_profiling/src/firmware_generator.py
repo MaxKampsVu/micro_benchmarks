@@ -120,4 +120,4 @@ def create_firmware(microbenchmark_asm):
 
     subprocess.run(["make", "-C", MAKEFILE_PATH],
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL)
+                stderr=subprocess.DEVNULL)

@@ -3,6 +3,7 @@ from chipwhisperer.capture.api.programmers import STM32FProgrammer
 from tqdm import trange
 import random
 import numpy as np
+import logging
 
 MICRO_BENCHMARK_HEX_PATH = "firmware_files/simpleserial-benchmark-template-CW308_STM32F3.hex"
 
@@ -20,12 +21,13 @@ def random_payload():
 def capture(num_traces, num_samples):
     textins = []
     traces = []
+    cw.set_all_log_levels(logging.CRITICAL) # reduce logging
     scope = cw.scope()
     scope.default_setup()
     target = cw.target(scope)
     program = STM32FProgrammer
     scope.adc.samples = num_samples
-    cw.program_target(scope, program, MICRO_BENCHMARK_HEX_PATH)
+    cw.program_target(scope, program, MICRO_BENCHMARK_HEX_PATH) 
 
     # Loop through all traces
     for i in trange(num_traces, desc="Capturing traces"):

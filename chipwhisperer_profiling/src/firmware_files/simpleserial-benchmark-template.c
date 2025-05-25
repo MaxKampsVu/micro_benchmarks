@@ -69,7 +69,7 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
 		
 		
 		"ldr %2, [%7]\n"
-		"ldr %0, [%4]\n"
+		"ldr %1, [%5]\n"
 		"ldr %2, [%7]\n"
 		"nop\n"
 		"nop\n"
@@ -79,8 +79,12 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
 		"nop\n"
 		"nop\n"
 		"nop\n"
-		"str %6, [%5]\n"
-		"str %0, [%5]\n"
+		"ldr %0, [%4]\n"
+		"ldr %2, [%7]\n"
+		"eor %2, %6, %6\n"
+		"eor %2, %6, %6\n"
+		"eor %2, %6, %6\n"
+		"str %1, [%5]\n"
 		
 		: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD)
 		: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
