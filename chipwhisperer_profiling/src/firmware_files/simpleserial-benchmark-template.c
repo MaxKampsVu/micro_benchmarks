@@ -60,6 +60,11 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
     volatile register uint32_t regB   asm("r2"); 
     volatile register uint32_t regC   asm("r3"); 
     volatile register uint32_t regD   asm("r4"); 
+    volatile register uint32_t regE   asm("r5"); 
+    volatile register uint32_t regF   asm("r6"); 
+    volatile register uint32_t regG   asm("r7"); 
+    volatile register uint32_t regH   asm("r8"); 
+    volatile register uint32_t regI   asm("r9"); 
     volatile uint32_t zero = (uint32_t) 0;
     // --- Start of power trace capture ---
     trigger_high();
@@ -68,25 +73,28 @@ uint8_t get_pt(uint8_t* data, uint8_t len) {
     asm volatile (
 		
 		
-		"ldr %2, [%7]\n"
-		"ldr %1, [%5]\n"
-		"ldr %2, [%7]\n"
-		"nop\n"
-		"nop\n"
-		"nop\n"
-		"nop\n"
-		"nop\n"
-		"nop\n"
-		"nop\n"
-		"nop\n"
-		"ldr %0, [%4]\n"
-		"ldr %2, [%7]\n"
-		"eor %2, %6, %6\n"
-		"eor %2, %6, %6\n"
-		"eor %2, %6, %6\n"
-		"str %1, [%5]\n"
+		"ldr %2, [%12]\n"
+		"ldr %0, [%9]\n"
+		"ldr %2, [%12]\n"
 		
-		: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD)
+		"ldr %2, [%12]\n"
+		"ldr %1, [%10]\n"
+		"ldr %2, [%12]\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"nop\n"
+		"eor %6, %0, %8\n"
+		"eor %8, %8, %8\n"
+		"eor %8, %8, %8\n"
+		"eor %8, %8, %8\n"
+		"eor %7, %1, %8\n"
+		
+		: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD), "+r" (regE), "+r" (regF), "+r" (regG), "+r" (regH), "+r" (regI)
 		: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
 		:
 		
