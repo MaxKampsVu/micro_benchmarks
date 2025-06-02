@@ -6,7 +6,7 @@
         "enabled": false
     },
     "remnant effect": {
-        "enabled": false,
+        "enabled": true,
         "parameters": 
         {
             "ld-ld": true,
@@ -19,9 +19,7 @@
         "enabled": true,
         "parameters": 
         {
-            "depth": 3,
-            "cross operand leakage": false,
-            "cross operand target leakage": false, 
+            "depth": 2,
             "adjacent leakage depth": 1
         }
     }

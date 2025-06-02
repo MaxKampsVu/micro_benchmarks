@@ -1,5 +1,10 @@
-chipwhisperer_profiling/src/benchmark_plots/
+cw_profiling/benchmark_plots/
+benchmarks/scVerif_benchmarks
 
+**/__init__.py
+
+*.png
+*.pyc
 *.npy
 *.bin 
 *.eep
@@ -8,3 +13,4 @@ chipwhisperer_profiling/src/benchmark_plots/
 *.lss
 *.map 
 *.sym
+*.chipwhisperer_profiling*

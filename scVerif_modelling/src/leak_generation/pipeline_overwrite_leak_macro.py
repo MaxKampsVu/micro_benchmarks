@@ -5,15 +5,15 @@ ADJ_DEPTH = 0
 
 
 # TODO: Leak everything
-# TODO: sw leaks dst, adr, offset  
+# TODO: st leaks dst, adr, offset  
 
 def macro_from_json(pipeline_config):
     global DEPTH, CROSS_OP_LEAK, CROSS_OP_TARGET_LEAK, ADJ_DEPTH
 
     leak_macros_str = ""
     DEPTH = pipeline_config["depth"]
-    CROSS_OP_LEAK = pipeline_config["cross operand leakage"]
-    CROSS_OP_TARGET_LEAK = pipeline_config["cross operand target leakage"]
+    CROSS_OP_LEAK = True
+    CROSS_OP_TARGET_LEAK = True
     ADJ_DEPTH = pipeline_config["adjacent leakage depth"]
 
     if DEPTH < ADJ_DEPTH:

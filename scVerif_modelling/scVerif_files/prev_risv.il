@@ -1,6 +1,6 @@
 include il "../scVerif_files/isa-ibex-rv32i.il"
 include il "../scVerif_files/leakyisa-ibex-pres-rv32i.il"
-include asm "../scVerif_micro_benchmarks/sram_remnant/st-st.objdump"
+include asm "../scVerif_files/testfile.objdump"
 
 annotate micro_benchmark
     region mem w32 x[0:1]
@@ -8,7 +8,7 @@ annotate micro_benchmark
     region mem w32 zero_mem[0:0]
     region mem w32 z[0:1]
     init a0 [x 0]
-    init a1 [mem 0]
+    init a1 [zero_mem 0]
     init a2 [z 0]
     input sharing x
     output sharing z;

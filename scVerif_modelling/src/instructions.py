@@ -38,8 +38,8 @@ def write_leaky_isa(leaky_isa_file, json_config_data):
         f.write(gen_and() + '\n')
         f.write(gen_nop() + '\n')
         f.write(gen_mov() + '\n')
-        f.write(gen_lw(remnant_parameters) + '\n')
-        f.write(gen_sw(remnant_parameters) + '\n')
+        f.write(gen_ld(remnant_parameters) + '\n')
+        f.write(gen_st(remnant_parameters) + '\n')
 
 
 def gen_initState(remnant_parameters):
@@ -99,12 +99,12 @@ def gen_mov():
     )
 
 
-def gen_lw(remnant_parameters):
+def gen_ld(remnant_parameters):
     pipeline_leak = "leak_pipeline(val, adr, ofs);" if LEAK_PIPELINE else ""
     remnant_leak = f"{remnant_gen.ld_trigger_from_json(remnant_parameters)}" if LEAK_REMNANT else ""
     reg_overwrite_leak = "leak_register_overwrite(dst, val);" if LEAK_REG_OVERWRITE else ""
     return (
-        "macro lw3_leak(w32 dst, w32 adr, w32 ofs)\n"
+        "macro ld3_leak(w32 dst, w32 adr, w32 ofs)\n"
         "   w32 remnantVal,\n"
         "   w32 val\n"
         "{\n"
@@ -118,14 +118,14 @@ def gen_lw(remnant_parameters):
     )
 
 
-# TODO: sw should leak the value stored into memory (not the previous value at the memory address)
+# TODO: st should leak the value stored into memory (not the previous value at the memory address)
 
-def gen_sw(remnant_parameters):
+def gen_st(remnant_parameters):
     pipeline_leak = "leak_pipeline(dst, adr, ofs);" if LEAK_PIPELINE else ""
     remnant_leak = f"{remnant_gen.st_trigger_from_json(remnant_parameters)}" if LEAK_REMNANT else ""
     sram_overwrite_leak = "leak_sram_overwrite(dst, val);" if LEAK_SRAM_OVERWRITE else ""
     return (
-        "macro sw3_leak(w32 dst, w32 adr, w32 ofs)\n"
+        "macro st3_leak(w32 dst, w32 adr, w32 ofs)\n"
         "   w32 remnantVal,\n"
         "   w32 val\n"
         "{\n"

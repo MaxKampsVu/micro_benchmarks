@@ -83,7 +83,7 @@ def gen_remnant_macro(ID):
     )
 
 
-# create triggers for lw3_leak and sw3_leak to call the leak_remnant macros
+# create triggers for ld3_leak and st3_leak to call the leak_remnant macros
 def trigger_from_json(remnant_config, is_ld):
     trigger_str = ""
     if remnant_config["ld-ld"]:

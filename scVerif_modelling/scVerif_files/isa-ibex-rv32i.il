@@ -5,6 +5,7 @@ w32 ra;
 w32 sp;
 w32 gp;
 w32 tp;
+w32 r0;
 w32 r1;
 w32 r2;
 w32 r3;
@@ -46,7 +47,7 @@ mem [];
 /**** Instructions ****/
 
 
-macro eor3 (w32 rd, w32 rs1, w32 rs2)
+macro xor3 (w32 rd, w32 rs1, w32 rs2)
 {
     rd <- rs1 ^w32 rs2;
 }
