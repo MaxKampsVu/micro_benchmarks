@@ -523,4 +523,4 @@ pipeline_benchmarks = {
               "pipeline-eor-eor-clear-eor-depth1": pipeline_eor_eor_clear_eor
               }
 
-benchmarks = sram_remnant_bencharks | register_overwrite_benchmarks | sram_overwrite_benchmarks | pipeline_benchmarks
+benchmarks = { "sram-remnant-ld-ld": sram_remnant_ld_ld, "sram-remnant-ld-ld-zero": sram_remnant_ld_ld_zero_ld}#sram_remnant_bencharks | register_overwrite_benchmarks | sram_overwrite_benchmarks | pipeline_benchmarks

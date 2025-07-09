@@ -4,8 +4,8 @@ import shutil, os;
 BENCHMARKS_DIR = "../scVerif_benchmarks"
 
 operands = """
-: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD), "+r" (regE), "+r" (regF), "+r" (regG)
-: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
+: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD)
+: "r" (&sharea0_mem), "r" (&sharea1_mem), "r" (&shareb0_mem), "r" (&shareb1_mem), "r" (&mem0), "r" (&mem1), "r" (&r01_mem), "r" (&r10_mem), "r" (zero), "r" (&zero)
 :
 """
 
@@ -13,14 +13,18 @@ index_reg_map = {
     "%0": "r1",
     "%1": "r2",
     "%2": "r3",
-    "%3": "r4",
-    "%4": "r5",
-    "%5": "r6",
-    "%6": "r7",
-    "%7": "share0_mem",
-    "%8": "share1_mem",
-    "%9": "r0",
-    "%10": "zero_mem"
+    "%3": "r5",
+    "%4": "sharea0_mem",
+    "%5": "sharea1_mem",
+    "%6": "shareb0_mem",
+    "%7": "shareb1_mem",
+    "%8": "mem0",
+    "%9": "mem1",
+    "%10": "r01_mem",
+    "%11": "r10_mem",
+    "%12": "zero",
+    "%13": "zero_mem",
+    "%14": "zero_mem"
 }
 
 def replace_index_by_reg(match):
@@ -51,11 +55,20 @@ def init_state(inline_asm):
 
 def rename_operands(inline_asm):
     # Reformat share0
-    inline_asm = inline_asm.replace("[share0_mem]", "a0, #0")
+    inline_asm = inline_asm.replace("[sharea0_mem]", "a0, #0")
     # Reformat share1
-    inline_asm = inline_asm.replace("[share1_mem]", "a0, #4")
+    inline_asm = inline_asm.replace("[sharea1_mem]", "a0, #4")
+    # Reformat share0
+    inline_asm = inline_asm.replace("[shareb0_mem]", "a1, #0")
+    # Reformat share1
+    inline_asm = inline_asm.replace("[shareb1_mem]", "a1, #4")
     # Reformat access to zero in memory
-    inline_asm = inline_asm.replace("[zero_mem]", "a1, #0")
+    inline_asm = inline_asm.replace("[zero_mem]", "a2, #0")
+
+    inline_asm = inline_asm.replace("[mem0]", "a3, #0")
+    inline_asm = inline_asm.replace("[mem1]", "a3, #4")
+    inline_asm = inline_asm.replace("[r01_mem]", "a4, #0")
+    inline_asm = inline_asm.replace("[r10_mem]", "a5, #4")
 
     inline_asm = inline_asm.replace("ldr", "ld")
     inline_asm = inline_asm.replace("str", "st")

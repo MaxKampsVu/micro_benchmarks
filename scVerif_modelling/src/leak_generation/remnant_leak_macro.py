@@ -41,7 +41,6 @@ def gen_remnant_macro(ID):
         op_last_id = ST_ID
         op_current_id = ST_ID
         clear_by_st = ST_ID
-        clear_by_ld = LD_ID
     if ID == ST_LD_ID:
         mem_op_name = ST_LD
         op_last_id = ST_ID

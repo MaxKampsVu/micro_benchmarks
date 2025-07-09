@@ -23,7 +23,7 @@
   23              		.thumb_func
   25              	get_pt:
   26              	.LVL0:
-  27              	.LFB4:
+  27              	.LFB0:
    1:simpleserial-benchmark-template.c **** 
    2:simpleserial-benchmark-template.c **** #include <stdint.h>
    3:simpleserial-benchmark-template.c **** #include <stdlib.h> // Required for malloc/free if used, but we'll use stack buffers
@@ -32,384 +32,431 @@
    6:simpleserial-benchmark-template.c **** #include "hal.h"
    7:simpleserial-benchmark-template.c **** #include "simpleserial.h"
    8:simpleserial-benchmark-template.c **** 
-   9:simpleserial-benchmark-template.c **** uint32_t rand_uint32() {
-  10:simpleserial-benchmark-template.c ****     return ((uint32_t)rand() << 16) | ((uint32_t)rand() & 0xFFFF);
-  11:simpleserial-benchmark-template.c **** }
-  12:simpleserial-benchmark-template.c **** 
-  13:simpleserial-benchmark-template.c **** // Helper function to convert a single hex character to its integer value
-  14:simpleserial-benchmark-template.c **** static uint8_t hex_to_int(char c) {
-  15:simpleserial-benchmark-template.c ****     if (c >= '0' && c <= '9') {
-  16:simpleserial-benchmark-template.c ****         return c - '0';
-  17:simpleserial-benchmark-template.c ****     } else if (c >= 'a' && c <= 'f') {
-  18:simpleserial-benchmark-template.c ****         return c - 'a' + 10;
-  19:simpleserial-benchmark-template.c ****     } else if (c >= 'A' && c <= 'F') {
-  20:simpleserial-benchmark-template.c ****         return c - 'A' + 10;
-  21:simpleserial-benchmark-template.c ****     }
-  22:simpleserial-benchmark-template.c ****     return 0; // Should not happen with valid input
-  23:simpleserial-benchmark-template.c **** }
-  24:simpleserial-benchmark-template.c **** 
-  25:simpleserial-benchmark-template.c **** // Helper function to convert 8 (big-endian) hex characters (representing 4 bytes) to a uint32_t
-  26:simpleserial-benchmark-template.c **** static uint32_t hex_to_uint32(const uint8_t* hex_chars) {
-  27:simpleserial-benchmark-template.c ****     uint32_t val = 0;
-  28:simpleserial-benchmark-template.c ****     for (int i = 0; i < 8; ++i) {
-  29:simpleserial-benchmark-template.c ****         val = (val << 4) | hex_to_int((char)hex_chars[i]);
-  30:simpleserial-benchmark-template.c ****     }
-  31:simpleserial-benchmark-template.c ****     return val;
-  32:simpleserial-benchmark-template.c **** }
-  33:simpleserial-benchmark-template.c **** 
-  34:simpleserial-benchmark-template.c **** // Helper function to convert a uint32_t to 8 (big-endian) hex characters 
-  35:simpleserial-benchmark-template.c **** static void uint32_to_hex(uint32_t val, uint8_t* hex_buf) {
-  36:simpleserial-benchmark-template.c ****     for (int i = 7; i >= 0; --i) {
-  37:simpleserial-benchmark-template.c ****         uint8_t nibble = (val >> (i * 4)) & 0x0F;
-  38:simpleserial-benchmark-template.c ****         if (nibble < 10) {
-  39:simpleserial-benchmark-template.c ****             hex_buf[7 - i] = '0' + nibble;
-  40:simpleserial-benchmark-template.c ****         } else {
-  41:simpleserial-benchmark-template.c ****             hex_buf[7 - i] = 'A' + (nibble - 10);
-  42:simpleserial-benchmark-template.c ****         }
-  43:simpleserial-benchmark-template.c ****     }
-  44:simpleserial-benchmark-template.c **** }
-  45:simpleserial-benchmark-template.c **** 
-  46:simpleserial-benchmark-template.c **** 
-  47:simpleserial-benchmark-template.c **** 
-  48:simpleserial-benchmark-template.c **** // SimpleSerial command handler for 'p' (process/plain) command
-  49:simpleserial-benchmark-template.c **** // Input 'data' contains 16 hex characters (8 bytes total)
-  50:simpleserial-benchmark-template.c **** // representing r0 (first 8 chars) and share0 (next 8 chars).
-  51:simpleserial-benchmark-template.c **** // Returns 0 on success.
-  52:simpleserial-benchmark-template.c **** uint8_t get_pt(uint8_t* data, uint8_t len) {
-  28              		.loc 1 52 44 view -0
+   9:simpleserial-benchmark-template.c **** uint8_t get_pt(uint8_t* data, uint8_t len) {
+  28              		.loc 1 9 44 view -0
   29              		.cfi_startproc
-  30              		@ args = 0, pretend = 0, frame = 16
+  30              		@ args = 0, pretend = 0, frame = 48
   31              		@ frame_needed = 0, uses_anonymous_args = 0
-  53:simpleserial-benchmark-template.c ****     if (len != 8) { // We expect 8 bytes (16 hex chars) converted by simpleserial
-  32              		.loc 1 53 5 view .LVU1
-  52:simpleserial-benchmark-template.c ****     if (len != 8) { // We expect 8 bytes (16 hex chars) converted by simpleserial
-  33              		.loc 1 52 44 is_stmt 0 view .LVU2
-  34 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  10:simpleserial-benchmark-template.c ****     if (len != 16) { // We expect 8 bytes (16 hex chars) converted by simpleserial
+  32              		.loc 1 10 5 view .LVU1
+   9:simpleserial-benchmark-template.c ****     if (len != 16) { // We expect 8 bytes (16 hex chars) converted by simpleserial
+  33              		.loc 1 9 44 is_stmt 0 view .LVU2
+  34 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
   35              	.LCFI0:
-  36              		.cfi_def_cfa_offset 28
-  37              		.cfi_offset 4, -28
-  38              		.cfi_offset 5, -24
-  39              		.cfi_offset 6, -20
-  40              		.cfi_offset 7, -16
-  41              		.cfi_offset 8, -12
-  42              		.cfi_offset 9, -8
-  43              		.cfi_offset 14, -4
-  44              		.loc 1 53 8 view .LVU3
-  45 0004 0829     		cmp	r1, #8
-  52:simpleserial-benchmark-template.c ****     if (len != 8) { // We expect 8 bytes (16 hex chars) converted by simpleserial
-  46              		.loc 1 52 44 view .LVU4
-  47 0006 85B0     		sub	sp, sp, #20
-  48              	.LCFI1:
-  49              		.cfi_def_cfa_offset 48
-  50              		.loc 1 53 8 view .LVU5
-  51 0008 3FD1     		bne	.L3
-  52              	.LVL1:
-  53              	.LBB4:
-  54              	.LBI4:
-  52:simpleserial-benchmark-template.c ****     if (len != 8) { // We expect 8 bytes (16 hex chars) converted by simpleserial
-  55              		.loc 1 52 9 is_stmt 1 view .LVU6
-  56              	.LBB5:
-  54:simpleserial-benchmark-template.c ****         return 1; 
-  55:simpleserial-benchmark-template.c ****     }
-  56:simpleserial-benchmark-template.c **** 
-  57:simpleserial-benchmark-template.c ****     volatile uint32_t share0  = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)data[
-  57              		.loc 1 57 5 view .LVU7
-  58 000a D0F800C0 		ldr	ip, [r0]	@ unaligned
-  59 000e 4068     		ldr	r0, [r0, #4]	@ unaligned
-  60              	.LVL2:
-  61              		.loc 1 57 5 is_stmt 0 view .LVU8
-  62 0010 9CFA8CFC 		rev	ip, ip
-  63 0014 00BA     		rev	r0, r0
-  58:simpleserial-benchmark-template.c ****     volatile uint32_t share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6
-  59:simpleserial-benchmark-template.c ****     volatile register uint32_t regA   asm("r1"); 
-  60:simpleserial-benchmark-template.c ****     volatile register uint32_t regB   asm("r2"); 
-  61:simpleserial-benchmark-template.c ****     volatile register uint32_t regC   asm("r3"); 
-  62:simpleserial-benchmark-template.c ****     volatile register uint32_t regD   asm("r4"); 
-  63:simpleserial-benchmark-template.c ****     volatile register uint32_t regE   asm("r5"); 
-  64:simpleserial-benchmark-template.c ****     volatile register uint32_t regF   asm("r6"); 
-  65:simpleserial-benchmark-template.c ****     volatile register uint32_t regG   asm("r7");
-  66:simpleserial-benchmark-template.c ****     volatile uint32_t zero = (uint32_t) 0;
-  64              		.loc 1 66 23 view .LVU9
-  65 0016 4FF00008 		mov	r8, #0
-  57:simpleserial-benchmark-template.c ****     volatile uint32_t share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6
-  66              		.loc 1 57 23 view .LVU10
-  67 001a CDF800C0 		str	ip, [sp]
-  58:simpleserial-benchmark-template.c ****     volatile uint32_t share1 = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)data[6
-  68              		.loc 1 58 5 is_stmt 1 view .LVU11
-  67:simpleserial-benchmark-template.c ****     // --- Start of power trace capture ---
-  68:simpleserial-benchmark-template.c ****     trigger_high();
-  69:simpleserial-benchmark-template.c ****     
-  70:simpleserial-benchmark-template.c ****     // Microbenchmark
-  71:simpleserial-benchmark-template.c ****     asm volatile (
-  69              		.loc 1 71 5 is_stmt 0 view .LVU12
-  70 001e 0DF10809 		add	r9, sp, #8
-  58:simpleserial-benchmark-template.c ****     volatile register uint32_t regA   asm("r1"); 
-  71              		.loc 1 58 23 view .LVU13
-  72 0022 0190     		str	r0, [sp, #4]
-  59:simpleserial-benchmark-template.c ****     volatile register uint32_t regB   asm("r2"); 
-  73              		.loc 1 59 5 is_stmt 1 view .LVU14
-  60:simpleserial-benchmark-template.c ****     volatile register uint32_t regC   asm("r3"); 
-  74              		.loc 1 60 5 view .LVU15
-  61:simpleserial-benchmark-template.c ****     volatile register uint32_t regD   asm("r4"); 
-  75              		.loc 1 61 5 view .LVU16
-  62:simpleserial-benchmark-template.c ****     volatile register uint32_t regE   asm("r5"); 
-  76              		.loc 1 62 5 view .LVU17
-  63:simpleserial-benchmark-template.c ****     volatile register uint32_t regF   asm("r6"); 
-  77              		.loc 1 63 5 view .LVU18
-  64:simpleserial-benchmark-template.c ****     volatile register uint32_t regG   asm("r7");
-  78              		.loc 1 64 5 view .LVU19
-  65:simpleserial-benchmark-template.c ****     volatile uint32_t zero = (uint32_t) 0;
-  79              		.loc 1 65 5 view .LVU20
-  66:simpleserial-benchmark-template.c ****     // --- Start of power trace capture ---
-  80              		.loc 1 66 5 view .LVU21
-  66:simpleserial-benchmark-template.c ****     // --- Start of power trace capture ---
-  81              		.loc 1 66 23 is_stmt 0 view .LVU22
-  82 0024 CDF80880 		str	r8, [sp, #8]
-  68:simpleserial-benchmark-template.c ****     
-  83              		.loc 1 68 5 is_stmt 1 view .LVU23
-  84 0028 FFF7FEFF 		bl	trigger_high
-  85              	.LVL3:
-  86              		.loc 1 71 5 view .LVU24
-  87 002c 0298     		ldr	r0, [sp, #8]
-  88 002e EC46     		mov	ip, sp
-  89 0030 0DF1040E 		add	lr, sp, #4
-  90              		.syntax unified
-  91              	@ 71 "simpleserial-benchmark-template.c" 1
-  92 0034 D9F80030 		ldr r3, [r9]
-  93 0038 DCF80010 	ldr r1, [ip]
-  94 003c D9F80030 	ldr r3, [r9]
-  95 0040 D9F80030 	ldr r3, [r9]
-  96 0044 DEF80070 	ldr r7, [lr]
-  97 0048 D9F80030 	ldr r3, [r9]
-  98 004c 80EA0003 	eor r3, r0, r0
-  99 0050 80EA0003 	eor r3, r0, r0
- 100 0054 80EA0003 	eor r3, r0, r0
- 101 0058 00BF     	nop
- 102 005a 00BF     	nop
- 103 005c 00BF     	nop
- 104 005e 00BF     	nop
- 105 0060 00BF     	nop
- 106 0062 00BF     	nop
- 107 0064 00BF     	nop
- 108 0066 00BF     	nop
- 109 0068 81EA0003 	eor r3, r1, r0
- 110 006c 85EA0505 	eor r5, r5, r5
- 111 0070 87EA0004 	eor r4, r7, r0
- 112              	
- 113              	@ 0 "" 2
-  72:simpleserial-benchmark-template.c **** 		
-  73:simpleserial-benchmark-template.c **** 		
-  74:simpleserial-benchmark-template.c **** 		"ldr %2, [%10]\n"
-  75:simpleserial-benchmark-template.c **** 		"ldr %0, [%7]\n"
-  76:simpleserial-benchmark-template.c **** 		"ldr %2, [%10]\n"
-  77:simpleserial-benchmark-template.c **** 		
-  78:simpleserial-benchmark-template.c **** 		"ldr %2, [%10]\n"
-  79:simpleserial-benchmark-template.c **** 		"ldr %6, [%8]\n"
-  80:simpleserial-benchmark-template.c **** 		"ldr %2, [%10]\n"
-  81:simpleserial-benchmark-template.c **** 		"eor %2, %9, %9\n"
-  82:simpleserial-benchmark-template.c **** 		"eor %2, %9, %9\n"
-  83:simpleserial-benchmark-template.c **** 		"eor %2, %9, %9\n"
-  84:simpleserial-benchmark-template.c **** 		"nop\n"
-  85:simpleserial-benchmark-template.c **** 		"nop\n"
-  86:simpleserial-benchmark-template.c **** 		"nop\n"
-  87:simpleserial-benchmark-template.c **** 		"nop\n"
-  88:simpleserial-benchmark-template.c **** 		"nop\n"
-  89:simpleserial-benchmark-template.c **** 		"nop\n"
-  90:simpleserial-benchmark-template.c **** 		"nop\n"
-  91:simpleserial-benchmark-template.c **** 		"nop\n"
-  92:simpleserial-benchmark-template.c **** 		"eor %2, %0, %9\n"
-  93:simpleserial-benchmark-template.c **** 		"eor %4, %4, %4\n"
-  94:simpleserial-benchmark-template.c **** 		"eor %3, %6, %9\n"
-  95:simpleserial-benchmark-template.c **** 		
-  96:simpleserial-benchmark-template.c **** 		: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD), "+r" (regE), "+r" (regF), "+r" (regG)
-  97:simpleserial-benchmark-template.c **** 		: "r" (&share0), "r" (&share1), "r" (zero), "r" (&zero)
-  98:simpleserial-benchmark-template.c **** 		:
-  99:simpleserial-benchmark-template.c **** 		
- 100:simpleserial-benchmark-template.c ****     );
- 101:simpleserial-benchmark-template.c ****     
- 102:simpleserial-benchmark-template.c ****     // --- End of power trace capture ---
- 103:simpleserial-benchmark-template.c ****     trigger_low();
- 114              		.loc 1 103 5 view .LVU25
- 115              		.thumb
- 116              		.syntax unified
- 117 0074 FFF7FEFF 		bl	trigger_low
- 118              	.LVL4:
- 104:simpleserial-benchmark-template.c **** 
- 105:simpleserial-benchmark-template.c ****     uint8_t result_buf[4];
- 119              		.loc 1 105 5 view .LVU26
- 106:simpleserial-benchmark-template.c **** 
- 107:simpleserial-benchmark-template.c ****     // 'r' command, 4 bytes of data
- 108:simpleserial-benchmark-template.c ****     simpleserial_put('r', 4, result_buf);
- 120              		.loc 1 108 5 view .LVU27
- 121 0078 7220     		movs	r0, #114
- 122 007a 03AA     		add	r2, sp, #12
- 123 007c 0421     		movs	r1, #4
- 124 007e FFF7FEFF 		bl	simpleserial_put
- 125              	.LVL5:
- 109:simpleserial-benchmark-template.c **** 
- 110:simpleserial-benchmark-template.c ****     return 0; // Indicate success
- 126              		.loc 1 110 5 view .LVU28
- 127              		.loc 1 110 5 is_stmt 0 view .LVU29
- 128 0082 4046     		mov	r0, r8
- 129              	.L2:
- 130              	.LBE5:
- 131              	.LBE4:
- 111:simpleserial-benchmark-template.c **** }
- 132              		.loc 1 111 1 view .LVU30
- 133 0084 05B0     		add	sp, sp, #20
- 134              	.LCFI2:
- 135              		.cfi_remember_state
- 136              		.cfi_def_cfa_offset 28
- 137              		@ sp needed
- 138 0086 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
- 139              	.LVL6:
- 140              	.L3:
- 141              	.LCFI3:
- 142              		.cfi_restore_state
-  54:simpleserial-benchmark-template.c ****     }
- 143              		.loc 1 54 16 view .LVU31
- 144 008a 0120     		movs	r0, #1
- 145              	.LVL7:
-  54:simpleserial-benchmark-template.c ****     }
- 146              		.loc 1 54 16 view .LVU32
- 147 008c FAE7     		b	.L2
- 148              		.cfi_endproc
- 149              	.LFE4:
- 151              		.section	.text.rand_uint32,"ax",%progbits
- 152              		.align	1
- 153              		.global	rand_uint32
- 154              		.syntax unified
- 155              		.thumb
- 156              		.thumb_func
- 158              	rand_uint32:
- 159              	.LFB0:
-   9:simpleserial-benchmark-template.c ****     return ((uint32_t)rand() << 16) | ((uint32_t)rand() & 0xFFFF);
- 160              		.loc 1 9 24 is_stmt 1 view -0
- 161              		.cfi_startproc
- 162              		@ args = 0, pretend = 0, frame = 0
- 163              		@ frame_needed = 0, uses_anonymous_args = 0
-  10:simpleserial-benchmark-template.c **** }
- 164              		.loc 1 10 5 view .LVU34
-   9:simpleserial-benchmark-template.c ****     return ((uint32_t)rand() << 16) | ((uint32_t)rand() & 0xFFFF);
- 165              		.loc 1 9 24 is_stmt 0 view .LVU35
- 166 0000 10B5     		push	{r4, lr}
- 167              	.LCFI4:
- 168              		.cfi_def_cfa_offset 8
- 169              		.cfi_offset 4, -8
- 170              		.cfi_offset 14, -4
-  10:simpleserial-benchmark-template.c **** }
- 171              		.loc 1 10 23 view .LVU36
- 172 0002 FFF7FEFF 		bl	rand
- 173              	.LVL8:
- 174 0006 0446     		mov	r4, r0
-  10:simpleserial-benchmark-template.c **** }
- 175              		.loc 1 10 50 discriminator 1 view .LVU37
- 176 0008 FFF7FEFF 		bl	rand
- 177              	.LVL9:
-  10:simpleserial-benchmark-template.c **** }
- 178              		.loc 1 10 57 discriminator 2 view .LVU38
- 179 000c 80B2     		uxth	r0, r0
-  11:simpleserial-benchmark-template.c **** 
- 180              		.loc 1 11 1 view .LVU39
- 181 000e 40EA0440 		orr	r0, r0, r4, lsl #16
- 182 0012 10BD     		pop	{r4, pc}
- 183              		.cfi_endproc
- 184              	.LFE0:
- 186              		.section	.text.startup.main,"ax",%progbits
- 187              		.align	1
- 188              		.global	main
- 189              		.syntax unified
- 190              		.thumb
- 191              		.thumb_func
- 193              	main:
- 194              	.LFB5:
- 112:simpleserial-benchmark-template.c **** 
+  36              		.cfi_def_cfa_offset 36
+  37              		.cfi_offset 4, -36
+  38              		.cfi_offset 5, -32
+  39              		.cfi_offset 6, -28
+  40              		.cfi_offset 7, -24
+  41              		.cfi_offset 8, -20
+  42              		.cfi_offset 9, -16
+  43              		.cfi_offset 10, -12
+  44              		.cfi_offset 11, -8
+  45              		.cfi_offset 14, -4
+  46              		.loc 1 10 8 view .LVU3
+  47 0004 1029     		cmp	r1, #16
+   9:simpleserial-benchmark-template.c ****     if (len != 16) { // We expect 8 bytes (16 hex chars) converted by simpleserial
+  48              		.loc 1 9 44 view .LVU4
+  49 0006 8DB0     		sub	sp, sp, #52
+  50              	.LCFI1:
+  51              		.cfi_def_cfa_offset 88
+  52              		.loc 1 10 8 view .LVU5
+  53 0008 40F0B980 		bne	.L3
+  54              	.LVL1:
+  55              	.LBB4:
+  56              	.LBI4:
+   9:simpleserial-benchmark-template.c ****     if (len != 16) { // We expect 8 bytes (16 hex chars) converted by simpleserial
+  57              		.loc 1 9 9 is_stmt 1 view .LVU6
+  58              	.LBB5:
+  11:simpleserial-benchmark-template.c ****         return 1; 
+  12:simpleserial-benchmark-template.c ****     }
+  13:simpleserial-benchmark-template.c **** 
+  14:simpleserial-benchmark-template.c ****     volatile uint32_t sharea0_mem  = (uint32_t)data[0] << 24 | (uint32_t)data[1] << 16 | (uint32_t)
+  59              		.loc 1 14 5 view .LVU7
+  60 000c 0268     		ldr	r2, [r0]	@ unaligned
+  61 000e 12BA     		rev	r2, r2
+  62              		.loc 1 14 23 is_stmt 0 view .LVU8
+  63 0010 0192     		str	r2, [sp, #4]
+  15:simpleserial-benchmark-template.c ****     volatile uint32_t sharea1_mem = (uint32_t)data[4] << 24 | (uint32_t)data[5] << 16 | (uint32_t)d
+  64              		.loc 1 15 5 is_stmt 1 view .LVU9
+  65 0012 4268     		ldr	r2, [r0, #4]	@ unaligned
+  66 0014 12BA     		rev	r2, r2
+  67              		.loc 1 15 23 is_stmt 0 view .LVU10
+  68 0016 0292     		str	r2, [sp, #8]
+  16:simpleserial-benchmark-template.c ****     volatile uint32_t shareb0_mem = 0;
+  69              		.loc 1 16 5 is_stmt 1 view .LVU11
+  70              		.loc 1 16 23 is_stmt 0 view .LVU12
+  71 0018 0024     		movs	r4, #0
+  17:simpleserial-benchmark-template.c ****     volatile uint32_t shareb1_mem = 1;
+  72              		.loc 1 17 23 view .LVU13
+  73 001a 0122     		movs	r2, #1
+  16:simpleserial-benchmark-template.c ****     volatile uint32_t shareb0_mem = 0;
+  74              		.loc 1 16 23 view .LVU14
+  75 001c 0394     		str	r4, [sp, #12]
+  76              		.loc 1 17 5 is_stmt 1 view .LVU15
+  77              		.loc 1 17 23 is_stmt 0 view .LVU16
+  78 001e 0492     		str	r2, [sp, #16]
+  18:simpleserial-benchmark-template.c ****     volatile uint32_t r01_mem = (uint32_t)data[8] << 24 | (uint32_t)data[9] << 16 | (uint32_t)data[
+  79              		.loc 1 18 5 is_stmt 1 view .LVU17
+  80 0020 8268     		ldr	r2, [r0, #8]	@ unaligned
+  81 0022 12BA     		rev	r2, r2
+  82              		.loc 1 18 23 is_stmt 0 view .LVU18
+  83 0024 0592     		str	r2, [sp, #20]
+  19:simpleserial-benchmark-template.c ****     volatile uint32_t r10_mem = (uint32_t)data[12] << 24 | (uint32_t)data[13] << 16 | (uint32_t)dat
+  84              		.loc 1 19 5 is_stmt 1 view .LVU19
+  85 0026 C268     		ldr	r2, [r0, #12]	@ unaligned
+  86 0028 12BA     		rev	r2, r2
+  87              		.loc 1 19 23 is_stmt 0 view .LVU20
+  88 002a 0692     		str	r2, [sp, #24]
+  20:simpleserial-benchmark-template.c ****     volatile uint32_t mem0 = 0;
+  89              		.loc 1 20 5 is_stmt 1 view .LVU21
+  21:simpleserial-benchmark-template.c ****     volatile uint32_t mem1 = 0;
+  22:simpleserial-benchmark-template.c ****     volatile register uint32_t regA   asm("r1"); 
+  23:simpleserial-benchmark-template.c ****     volatile register uint32_t regB   asm("r3"); 
+  24:simpleserial-benchmark-template.c ****     volatile register uint32_t regC   asm("r5"); 
+  25:simpleserial-benchmark-template.c ****     volatile register uint32_t regD   asm("r7"); 
+  26:simpleserial-benchmark-template.c ****     volatile uint32_t zero = (uint32_t) 0;
+  27:simpleserial-benchmark-template.c ****     // --- Start of power trace capture ---
+  28:simpleserial-benchmark-template.c ****     trigger_high();
+  29:simpleserial-benchmark-template.c ****     
+  30:simpleserial-benchmark-template.c ****     // Microbenchmark
+  31:simpleserial-benchmark-template.c ****     asm volatile (
+  90              		.loc 1 31 5 is_stmt 0 view .LVU22
+  91 002c 04AE     		add	r6, sp, #16
+  20:simpleserial-benchmark-template.c ****     volatile uint32_t mem0 = 0;
+  92              		.loc 1 20 23 view .LVU23
+  93 002e 0794     		str	r4, [sp, #28]
+  21:simpleserial-benchmark-template.c ****     volatile uint32_t mem1 = 0;
+  94              		.loc 1 21 5 is_stmt 1 view .LVU24
+  95              		.loc 1 31 5 is_stmt 0 view .LVU25
+  96 0030 0DF11C08 		add	r8, sp, #28
+  21:simpleserial-benchmark-template.c ****     volatile uint32_t mem1 = 0;
+  97              		.loc 1 21 23 view .LVU26
+  98 0034 0894     		str	r4, [sp, #32]
+  22:simpleserial-benchmark-template.c ****     volatile register uint32_t regB   asm("r3"); 
+  99              		.loc 1 22 5 is_stmt 1 view .LVU27
+  23:simpleserial-benchmark-template.c ****     volatile register uint32_t regC   asm("r5"); 
+ 100              		.loc 1 23 5 view .LVU28
+  24:simpleserial-benchmark-template.c ****     volatile register uint32_t regD   asm("r7"); 
+ 101              		.loc 1 24 5 view .LVU29
+  25:simpleserial-benchmark-template.c ****     volatile uint32_t zero = (uint32_t) 0;
+ 102              		.loc 1 25 5 view .LVU30
+  26:simpleserial-benchmark-template.c ****     // --- Start of power trace capture ---
+ 103              		.loc 1 26 5 view .LVU31
+ 104              		.loc 1 31 5 is_stmt 0 view .LVU32
+ 105 0036 0DF12009 		add	r9, sp, #32
+  26:simpleserial-benchmark-template.c ****     // --- Start of power trace capture ---
+ 106              		.loc 1 26 23 view .LVU33
+ 107 003a 0994     		str	r4, [sp, #36]
+  28:simpleserial-benchmark-template.c ****     
+ 108              		.loc 1 28 5 is_stmt 1 view .LVU34
+ 109              		.loc 1 31 5 is_stmt 0 view .LVU35
+ 110 003c 0DF1140A 		add	r10, sp, #20
+  28:simpleserial-benchmark-template.c ****     
+ 111              		.loc 1 28 5 view .LVU36
+ 112 0040 FFF7FEFF 		bl	trigger_high
+ 113              	.LVL2:
+ 114              		.loc 1 31 5 is_stmt 1 view .LVU37
+ 115 0044 0DF1180B 		add	fp, sp, #24
+ 116 0048 0998     		ldr	r0, [sp, #36]
+ 117 004a 01AA     		add	r2, sp, #4
+ 118 004c 0DF1080C 		add	ip, sp, #8
+ 119 0050 0DF10C0E 		add	lr, sp, #12
+ 120 0054 09AC     		add	r4, sp, #36
+ 121              		.syntax unified
+ 122              	@ 31 "simpleserial-benchmark-template.c" 1
+ 123 0056 80EA0000 		eor r0, r0, r0
+ 124 005a 80EA0000 	eor r0, r0, r0
+ 125 005e 80EA0000 	eor r0, r0, r0
+ 126 0062 80EA0000 	eor r0, r0, r0
+ 127 0066 80EA0000 	eor r0, r0, r0
+ 128 006a 80EA0000 	eor r0, r0, r0
+ 129 006e 80EA0000 	eor r0, r0, r0
+ 130 0072 80EA0000 	eor r0, r0, r0
+ 131 0076 80EA0000 	eor r0, r0, r0
+ 132 007a 80EA0000 	eor r0, r0, r0
+ 133 007e 80EA0000 	eor r0, r0, r0
+ 134 0082 80EA0000 	eor r0, r0, r0
+ 135 0086 1168     	ldr r1, [r2]
+ 136 0088 DEF80030 	ldr r3, [lr]
+ 137 008c 81EA0305 	eor r5, r1, r3
+ 138 0090 DCF80010 	ldr r1, [ip]
+ 139 0094 3368     	ldr r3, [r6]
+ 140 0096 81EA0307 	eor r7, r1, r3
+ 141 009a C8F80050 	str r5, [r8]
+ 142 009e 2060     	str r0, [r4]
+ 143 00a0 C9F80070 	str r7, [r9]
+ 144 00a4 80EA0000 	eor r0, r0, r0
+ 145 00a8 80EA0000 	eor r0, r0, r0
+ 146 00ac 80EA0000 	eor r0, r0, r0
+ 147 00b0 80EA0000 	eor r0, r0, r0
+ 148 00b4 80EA0000 	eor r0, r0, r0
+ 149 00b8 80EA0000 	eor r0, r0, r0
+ 150 00bc 80EA0000 	eor r0, r0, r0
+ 151 00c0 80EA0000 	eor r0, r0, r0
+ 152 00c4 80EA0000 	eor r0, r0, r0
+ 153 00c8 80EA0000 	eor r0, r0, r0
+ 154 00cc 80EA0000 	eor r0, r0, r0
+ 155 00d0 80EA0000 	eor r0, r0, r0
+ 156 00d4 2068     	ldr r0, [r4]
+ 157 00d6 1168     	ldr r1, [r2]
+ 158 00d8 3368     	ldr r3, [r6]
+ 159 00da DCF80050 	ldr r5, [ip]
+ 160 00de DEF80070 	ldr r7, [lr]
+ 161 00e2 80EA0000 	eor r0, r0, r0
+ 162 00e6 80EA0000 	eor r0, r0, r0
+ 163 00ea 80EA0000 	eor r0, r0, r0
+ 164 00ee 80EA0000 	eor r0, r0, r0
+ 165 00f2 80EA0000 	eor r0, r0, r0
+ 166 00f6 80EA0000 	eor r0, r0, r0
+ 167 00fa 80EA0000 	eor r0, r0, r0
+ 168 00fe 80EA0000 	eor r0, r0, r0
+ 169 0102 80EA0000 	eor r0, r0, r0
+ 170 0106 80EA0000 	eor r0, r0, r0
+ 171 010a 80EA0000 	eor r0, r0, r0
+ 172 010e 80EA0000 	eor r0, r0, r0
+ 173 0112 01EA0301 	and r1, r1, r3
+ 174 0116 05EA0705 	and r5, r5, r7
+ 175 011a 80EA0000 	eor r0, r0, r0
+ 176 011e 80EA0000 	eor r0, r0, r0
+ 177 0122 80EA0000 	eor r0, r0, r0
+ 178 0126 80EA0000 	eor r0, r0, r0
+ 179 012a 80EA0000 	eor r0, r0, r0
+ 180 012e 80EA0000 	eor r0, r0, r0
+ 181 0132 80EA0000 	eor r0, r0, r0
+ 182 0136 80EA0000 	eor r0, r0, r0
+ 183 013a 80EA0000 	eor r0, r0, r0
+ 184 013e 80EA0000 	eor r0, r0, r0
+ 185 0142 80EA0000 	eor r0, r0, r0
+ 186 0146 80EA0000 	eor r0, r0, r0
+ 187 014a DAF80030 	ldr r3, [r10]
+ 188 014e 81EA0301 	eor r1, r1, r3
+ 189 0152 81EA0501 	eor r1, r1, r5
+ 190 0156 D8F80050 	ldr r5, [r8]
+ 191 015a 2068     	ldr r0, [r4]
+ 192 015c D9F80070 	ldr r7, [r9]
+ 193 0160 83EA0503 	eor r3, r3, r5
+ 194 0164 81EA0701 	eor r1, r1, r7
+ 195              	
+ 196              	@ 0 "" 2
+  32:simpleserial-benchmark-template.c **** 		
+  33:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  34:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  35:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  36:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  37:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  38:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  39:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  40:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  41:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  42:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  43:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  44:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  45:simpleserial-benchmark-template.c **** 		"ldr %0, [%4]\n"
+  46:simpleserial-benchmark-template.c **** 		"ldr %1, [%6]\n"
+  47:simpleserial-benchmark-template.c **** 		"eor %2, %0, %1\n"
+  48:simpleserial-benchmark-template.c **** 		"ldr %0, [%5]\n"
+  49:simpleserial-benchmark-template.c **** 		"ldr %1, [%7]\n"
+  50:simpleserial-benchmark-template.c **** 		"eor %3, %0, %1\n"
+  51:simpleserial-benchmark-template.c **** 		"str %2, [%8]\n"
+  52:simpleserial-benchmark-template.c **** 		"str %12, [%13]\n"
+  53:simpleserial-benchmark-template.c **** 		"str %3, [%9]\n"
+  54:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  55:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  56:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  57:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  58:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  59:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  60:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  61:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  62:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  63:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  64:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  65:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  66:simpleserial-benchmark-template.c **** 		"ldr %12, [%13]\n"
+  67:simpleserial-benchmark-template.c **** 		"ldr %0, [%4]\n"
+  68:simpleserial-benchmark-template.c **** 		"ldr %1, [%7]\n"
+  69:simpleserial-benchmark-template.c **** 		"ldr %2, [%5]\n"
+  70:simpleserial-benchmark-template.c **** 		"ldr %3, [%6]\n"
+  71:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  72:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  73:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  74:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  75:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  76:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  77:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  78:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  79:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  80:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  81:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  82:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  83:simpleserial-benchmark-template.c **** 		"and %0, %0, %1\n"  // (ai ∧ bj )
+  84:simpleserial-benchmark-template.c **** 		"and %2, %2, %3\n"  // (aj ∧ bi )
+  85:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  86:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  87:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  88:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  89:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  90:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  91:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  92:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  93:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  94:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  95:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  96:simpleserial-benchmark-template.c **** 		"eor %12, %12, %12\n"
+  97:simpleserial-benchmark-template.c **** 		"ldr %1, [%10]\n"  // s ← 0, 132
+  98:simpleserial-benchmark-template.c **** 		"eor %0, %0, %1\n"  // s ⊕ (ai ∧ bj)
+  99:simpleserial-benchmark-template.c **** 		"eor %0, %0, %2\n"  // s′ ← (s ⊕ (ai ∧ bj)) ⊕ (aj ∧ bi)
+ 100:simpleserial-benchmark-template.c **** 		"ldr %2, [%8]\n"
+ 101:simpleserial-benchmark-template.c **** 		"ldr %12, [%13]\n"
+ 102:simpleserial-benchmark-template.c **** 		"ldr %3, [%9]\n"
+ 103:simpleserial-benchmark-template.c **** 		"eor %1, %1, %2\n"  // ci ← ci ⊕ s
+ 104:simpleserial-benchmark-template.c **** 		"eor %0, %0, %3\n"  // cj ← cj ⊕ s′
+ 105:simpleserial-benchmark-template.c **** 		
+ 106:simpleserial-benchmark-template.c **** 		: "+r" (regA), "+r" (regB), "+r" (regC), "+r" (regD)
+ 107:simpleserial-benchmark-template.c **** 		: "r" (&sharea0_mem), "r" (&sharea1_mem), "r" (&shareb0_mem), "r" (&shareb1_mem), "r" (&mem0), "r
+ 108:simpleserial-benchmark-template.c **** 		:
+ 109:simpleserial-benchmark-template.c ****     );
+ 110:simpleserial-benchmark-template.c ****     
+ 111:simpleserial-benchmark-template.c ****     // --- End of power trace capture ---
+ 112:simpleserial-benchmark-template.c ****     trigger_low();
+ 197              		.loc 1 112 5 view .LVU38
+ 198              		.thumb
+ 199              		.syntax unified
+ 200 0168 FFF7FEFF 		bl	trigger_low
+ 201              	.LVL3:
  113:simpleserial-benchmark-template.c **** 
- 114:simpleserial-benchmark-template.c **** int main(void) {
- 195              		.loc 1 114 16 is_stmt 1 view -0
- 196              		.cfi_startproc
- 197              		@ Volatile: function does not return.
- 198              		@ args = 0, pretend = 0, frame = 0
- 199              		@ frame_needed = 0, uses_anonymous_args = 0
- 115:simpleserial-benchmark-template.c ****     platform_init();
- 200              		.loc 1 115 5 view .LVU41
- 114:simpleserial-benchmark-template.c ****     platform_init();
- 201              		.loc 1 114 16 is_stmt 0 view .LVU42
- 202 0000 08B5     		push	{r3, lr}
- 203              	.LCFI5:
- 204              		.cfi_def_cfa_offset 8
- 205              		.cfi_offset 3, -8
- 206              		.cfi_offset 14, -4
- 207              		.loc 1 115 5 view .LVU43
- 208 0002 FFF7FEFF 		bl	platform_init
- 209              	.LVL10:
- 116:simpleserial-benchmark-template.c **** 
- 117:simpleserial-benchmark-template.c ****     init_uart();
- 210              		.loc 1 117 5 is_stmt 1 view .LVU44
- 211 0006 FFF7FEFF 		bl	init_uart
- 212              	.LVL11:
+ 114:simpleserial-benchmark-template.c ****     uint8_t result_buf[8];
+ 202              		.loc 1 114 5 view .LVU39
+ 115:simpleserial-benchmark-template.c **** 
+ 116:simpleserial-benchmark-template.c ****     // 'r' command, 8 bytes of data
+ 117:simpleserial-benchmark-template.c ****     simpleserial_put('r', 8, result_buf);
+ 203              		.loc 1 117 5 view .LVU40
+ 204 016c 7220     		movs	r0, #114
+ 205 016e 0AAA     		add	r2, sp, #40
+ 206 0170 0821     		movs	r1, #8
+ 207 0172 FFF7FEFF 		bl	simpleserial_put
+ 208              	.LVL4:
  118:simpleserial-benchmark-template.c **** 
- 119:simpleserial-benchmark-template.c ****     trigger_setup();
- 213              		.loc 1 119 5 view .LVU45
- 214 000a FFF7FEFF 		bl	trigger_setup
- 215              	.LVL12:
- 120:simpleserial-benchmark-template.c ****     simpleserial_init();
- 216              		.loc 1 120 5 view .LVU46
- 217 000e FFF7FEFF 		bl	simpleserial_init
- 218              	.LVL13:
+ 119:simpleserial-benchmark-template.c ****     return 0; // Indicate success
+ 209              		.loc 1 119 5 view .LVU41
+ 210              		.loc 1 119 5 is_stmt 0 view .LVU42
+ 211 0176 0020     		movs	r0, #0
+ 212              	.L2:
+ 213              	.LBE5:
+ 214              	.LBE4:
+ 120:simpleserial-benchmark-template.c **** }
+ 215              		.loc 1 120 1 view .LVU43
+ 216 0178 0DB0     		add	sp, sp, #52
+ 217              	.LCFI2:
+ 218              		.cfi_remember_state
+ 219              		.cfi_def_cfa_offset 36
+ 220              		@ sp needed
+ 221 017a BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 222              	.LVL5:
+ 223              	.L3:
+ 224              	.LCFI3:
+ 225              		.cfi_restore_state
+  11:simpleserial-benchmark-template.c ****     }
+ 226              		.loc 1 11 16 view .LVU44
+ 227 017e 0120     		movs	r0, #1
+ 228              	.LVL6:
+  11:simpleserial-benchmark-template.c ****     }
+ 229              		.loc 1 11 16 view .LVU45
+ 230 0180 FAE7     		b	.L2
+ 231              		.cfi_endproc
+ 232              	.LFE0:
+ 234              		.section	.text.startup.main,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	main
+ 237              		.syntax unified
+ 238              		.thumb
+ 239              		.thumb_func
+ 241              	main:
+ 242              	.LFB1:
  121:simpleserial-benchmark-template.c **** 
- 122:simpleserial-benchmark-template.c ****     // Register the SimpleSerial command 'p'
- 123:simpleserial-benchmark-template.c ****     // 'p': command character
- 124:simpleserial-benchmark-template.c ****     // 8: expected number of data bytes (16 hex characters input)
- 125:simpleserial-benchmark-template.c ****     // get_pt: callback function pointer
- 126:simpleserial-benchmark-template.c ****     simpleserial_addcmd('p', 8, get_pt);
- 219              		.loc 1 126 5 view .LVU47
- 220 0012 044A     		ldr	r2, .L7
- 221 0014 0821     		movs	r1, #8
- 222 0016 7020     		movs	r0, #112
- 223 0018 FFF7FEFF 		bl	simpleserial_addcmd
- 224              	.LVL14:
- 225              	.L6:
+ 122:simpleserial-benchmark-template.c **** 
+ 123:simpleserial-benchmark-template.c **** int main(void) {
+ 243              		.loc 1 123 16 is_stmt 1 view -0
+ 244              		.cfi_startproc
+ 245              		@ Volatile: function does not return.
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 124:simpleserial-benchmark-template.c ****     platform_init();
+ 248              		.loc 1 124 5 view .LVU47
+ 123:simpleserial-benchmark-template.c ****     platform_init();
+ 249              		.loc 1 123 16 is_stmt 0 view .LVU48
+ 250 0000 08B5     		push	{r3, lr}
+ 251              	.LCFI4:
+ 252              		.cfi_def_cfa_offset 8
+ 253              		.cfi_offset 3, -8
+ 254              		.cfi_offset 14, -4
+ 255              		.loc 1 124 5 view .LVU49
+ 256 0002 FFF7FEFF 		bl	platform_init
+ 257              	.LVL7:
+ 125:simpleserial-benchmark-template.c **** 
+ 126:simpleserial-benchmark-template.c ****     init_uart();
+ 258              		.loc 1 126 5 is_stmt 1 view .LVU50
+ 259 0006 FFF7FEFF 		bl	init_uart
+ 260              	.LVL8:
  127:simpleserial-benchmark-template.c **** 
- 128:simpleserial-benchmark-template.c ****     // Main loop: continuously check for and process incoming SimpleSerial data
- 129:simpleserial-benchmark-template.c ****     while (1) {
- 226              		.loc 1 129 5 view .LVU48
- 130:simpleserial-benchmark-template.c ****         simpleserial_get();
- 227              		.loc 1 130 9 discriminator 2 view .LVU49
- 228 001c FFF7FEFF 		bl	simpleserial_get
- 229              	.LVL15:
- 129:simpleserial-benchmark-template.c ****         simpleserial_get();
- 230              		.loc 1 129 11 view .LVU50
- 231 0020 FCE7     		b	.L6
- 232              	.L8:
- 233 0022 00BF     		.align	2
- 234              	.L7:
- 235 0024 00000000 		.word	get_pt
- 236              		.cfi_endproc
- 237              	.LFE5:
- 239              		.text
- 240              	.Letext0:
- 241              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
- 242              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
- 243              		.file 4 "/home/max/chipwhisperer/firmware/mcu/simpleserial/simpleserial.h"
- 244              		.file 5 "/home/max/chipwhisperer/firmware/mcu/hal/stm32f3/stm32f3_hal.h"
- 245              		.file 6 "/home/max/chipwhisperer/firmware/mcu/hal/hal.h"
- 246              		.file 7 "/usr/arm-none-eabi/include/stdlib.h"
+ 128:simpleserial-benchmark-template.c ****     trigger_setup();
+ 261              		.loc 1 128 5 view .LVU51
+ 262 000a FFF7FEFF 		bl	trigger_setup
+ 263              	.LVL9:
+ 129:simpleserial-benchmark-template.c ****     simpleserial_init();
+ 264              		.loc 1 129 5 view .LVU52
+ 265 000e FFF7FEFF 		bl	simpleserial_init
+ 266              	.LVL10:
+ 130:simpleserial-benchmark-template.c **** 
+ 131:simpleserial-benchmark-template.c ****     // Register the SimpleSerial command 'p'
+ 132:simpleserial-benchmark-template.c ****     // 'p': command character
+ 133:simpleserial-benchmark-template.c ****     // 8: expected number of data bytes (16 hex characters input)
+ 134:simpleserial-benchmark-template.c ****     // get_pt: callback function pointer
+ 135:simpleserial-benchmark-template.c ****     simpleserial_addcmd('p', 16, get_pt);
+ 267              		.loc 1 135 5 view .LVU53
+ 268 0012 044A     		ldr	r2, .L6
+ 269 0014 1021     		movs	r1, #16
+ 270 0016 7020     		movs	r0, #112
+ 271 0018 FFF7FEFF 		bl	simpleserial_addcmd
+ 272              	.LVL11:
+ 273              	.L5:
+ 136:simpleserial-benchmark-template.c **** 
+ 137:simpleserial-benchmark-template.c ****     // Main loop: continuously check for and process incoming SimpleSerial data
+ 138:simpleserial-benchmark-template.c ****     while (1) {
+ 274              		.loc 1 138 5 view .LVU54
+ 139:simpleserial-benchmark-template.c ****         simpleserial_get();
+ 275              		.loc 1 139 9 discriminator 2 view .LVU55
+ 276 001c FFF7FEFF 		bl	simpleserial_get
+ 277              	.LVL12:
+ 138:simpleserial-benchmark-template.c ****         simpleserial_get();
+ 278              		.loc 1 138 11 view .LVU56
+ 279 0020 FCE7     		b	.L5
+ 280              	.L7:
+ 281 0022 00BF     		.align	2
+ 282              	.L6:
+ 283 0024 00000000 		.word	get_pt
+ 284              		.cfi_endproc
+ 285              	.LFE1:
+ 287              		.text
+ 288              	.Letext0:
+ 289              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 290              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 291              		.file 4 "/home/max/chipwhisperer/firmware/mcu/simpleserial/simpleserial.h"
+ 292              		.file 5 "/home/max/chipwhisperer/firmware/mcu/hal/stm32f3/stm32f3_hal.h"
+ 293              		.file 6 "/home/max/chipwhisperer/firmware/mcu/hal/hal.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 simpleserial-benchmark-template.c
-     /tmp/cclYVARo.s:19     .text.get_pt:00000000 $t
-     /tmp/cclYVARo.s:25     .text.get_pt:00000000 get_pt
-     /tmp/cclYVARo.s:152    .text.rand_uint32:00000000 $t
-     /tmp/cclYVARo.s:158    .text.rand_uint32:00000000 rand_uint32
-     /tmp/cclYVARo.s:187    .text.startup.main:00000000 $t
-     /tmp/cclYVARo.s:193    .text.startup.main:00000000 main
-     /tmp/cclYVARo.s:235    .text.startup.main:00000024 $d
+     /tmp/cc4mVfrB.s:19     .text.get_pt:00000000 $t
+     /tmp/cc4mVfrB.s:25     .text.get_pt:00000000 get_pt
+     /tmp/cc4mVfrB.s:235    .text.startup.main:00000000 $t
+     /tmp/cc4mVfrB.s:241    .text.startup.main:00000000 main
+     /tmp/cc4mVfrB.s:283    .text.startup.main:00000024 $d
 
 UNDEFINED SYMBOLS
 trigger_high
 trigger_low
 simpleserial_put
-rand
 platform_init
 init_uart
 trigger_setup

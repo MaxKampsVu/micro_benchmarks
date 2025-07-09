@@ -6,7 +6,7 @@
         "enabled": false
     },
     "remnant effect": {
-        "enabled": true,
+        "enabled": true, 
         "parameters": 
         {
             "ld-ld": true,

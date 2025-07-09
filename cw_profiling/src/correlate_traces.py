@@ -55,6 +55,7 @@ def correlate(benchmark_name, target_dir):
     num_traces = np.shape(traces)[0]
     num_samples = np.shape(traces)[1]
 
+
     cor = calculate_correlation(traces, textins, num_traces, num_samples)
 
     plt.ylim(-1, 1)
@@ -63,8 +64,8 @@ def correlate(benchmark_name, target_dir):
 
     plt.xlabel("sample")
     plt.ylabel("correlation")
-
-
     save_path = f"{target_dir}/{benchmark_name}.png"
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.clf()
+
+    # np.save(f"{target_dir}/{benchmark_name}.npy", cor)

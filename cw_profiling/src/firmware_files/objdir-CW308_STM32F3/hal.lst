@@ -221,25 +221,25 @@
  202              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 hal.c
-     /tmp/ccvD3o1Q.s:19     .text.led_ok:00000000 $t
-     /tmp/ccvD3o1Q.s:25     .text.led_ok:00000000 led_ok
-     /tmp/ccvD3o1Q.s:39     .text.led_error:00000000 $t
-     /tmp/ccvD3o1Q.s:45     .text.led_error:00000000 led_error
-     /tmp/ccvD3o1Q.s:57     .text._close:00000000 $t
-     /tmp/ccvD3o1Q.s:63     .text._close:00000000 _close
-     /tmp/ccvD3o1Q.s:76     .text._fstat:00000000 $t
-     /tmp/ccvD3o1Q.s:82     .text._fstat:00000000 _fstat
-     /tmp/ccvD3o1Q.s:94     .text._getpid:00000000 $t
-     /tmp/ccvD3o1Q.s:100    .text._getpid:00000000 _getpid
-     /tmp/ccvD3o1Q.s:112    .text._isatty:00000000 $t
-     /tmp/ccvD3o1Q.s:118    .text._isatty:00000000 _isatty
-     /tmp/ccvD3o1Q.s:130    .text._kill:00000000 $t
-     /tmp/ccvD3o1Q.s:136    .text._kill:00000000 _kill
-     /tmp/ccvD3o1Q.s:148    .text._lseek:00000000 $t
-     /tmp/ccvD3o1Q.s:154    .text._lseek:00000000 _lseek
-     /tmp/ccvD3o1Q.s:166    .text._read:00000000 $t
-     /tmp/ccvD3o1Q.s:172    .text._read:00000000 _read
-     /tmp/ccvD3o1Q.s:184    .text._write:00000000 $t
-     /tmp/ccvD3o1Q.s:190    .text._write:00000000 _write
+     /tmp/cc7gjoON.s:19     .text.led_ok:00000000 $t
+     /tmp/cc7gjoON.s:25     .text.led_ok:00000000 led_ok
+     /tmp/cc7gjoON.s:39     .text.led_error:00000000 $t
+     /tmp/cc7gjoON.s:45     .text.led_error:00000000 led_error
+     /tmp/cc7gjoON.s:57     .text._close:00000000 $t
+     /tmp/cc7gjoON.s:63     .text._close:00000000 _close
+     /tmp/cc7gjoON.s:76     .text._fstat:00000000 $t
+     /tmp/cc7gjoON.s:82     .text._fstat:00000000 _fstat
+     /tmp/cc7gjoON.s:94     .text._getpid:00000000 $t
+     /tmp/cc7gjoON.s:100    .text._getpid:00000000 _getpid
+     /tmp/cc7gjoON.s:112    .text._isatty:00000000 $t
+     /tmp/cc7gjoON.s:118    .text._isatty:00000000 _isatty
+     /tmp/cc7gjoON.s:130    .text._kill:00000000 $t
+     /tmp/cc7gjoON.s:136    .text._kill:00000000 _kill
+     /tmp/cc7gjoON.s:148    .text._lseek:00000000 $t
+     /tmp/cc7gjoON.s:154    .text._lseek:00000000 _lseek
+     /tmp/cc7gjoON.s:166    .text._read:00000000 $t
+     /tmp/cc7gjoON.s:172    .text._read:00000000 _read
+     /tmp/cc7gjoON.s:184    .text._write:00000000 $t
+     /tmp/cc7gjoON.s:190    .text._write:00000000 _write
 
 NO UNDEFINED SYMBOLS

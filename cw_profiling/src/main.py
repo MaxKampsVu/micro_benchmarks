@@ -6,7 +6,7 @@ import shutil
 import pipeline
 BENCHMARK_PLOT_DIR = "../benchmark_plots"
 NUM_SAMPLES = 500
-NUM_TRACES = 2000
+NUM_TRACES = 100
 
 def load_py_module(py_file_path):
     """Dynamically load a Python file as a module."""

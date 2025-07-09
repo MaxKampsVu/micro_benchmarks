@@ -40,7 +40,7 @@ macro leak_remnant_st_st(w32 newVal, w32 currentInstructionId)
       lastInstructionId_st_st <- currentInstructionId;
       remnantVal_st_st <- newVal;
    }
-   if (currentInstructionId == (w32) 1) 
+   if (currentInstructionId == (w32) -1) 
    {
       lastInstructionId_st_st <- currentInstructionId;
       remnantVal_st_st <- newVal;
@@ -96,38 +96,38 @@ macro leak_remnant_ld_st(w32 newVal, w32 currentInstructionId)
 }
 
 // Pipeline stage variables
-w32 result0;
+w32 dst0;
 w32 OpA0;
 w32 OpB0;
-w32 result1;
+w32 dst1;
 w32 OpA1;
 w32 OpB1;
 
-macro leak_pipeline(w32 resultNew, w32 OpANew, w32 OpBNew)
+macro leak_pipeline(w32 dstNew, w32 OpANew, w32 OpBNew)
 {
    // Shift pipeline stage variables
    OpA1 <- OpA0;
    OpB1 <- OpB0;
-   result1 <- result0;
+   dst1 <- dst0;
    // Insert new values into first stage of pipeline
    OpA0 <- OpANew;
    OpB0 <- OpBNew;
-   result0 <- resultNew;
+   dst0 <- dstNew;
 
    // Leak stages 0, 1
    leak pip (OpA0 ^w32 OpA1);
    leak pip (OpB0 ^w32 OpB1);
-   leak pip (result0 ^w32 result1);
+   leak pip (dst0 ^w32 dst1);
 
    // Leak stages 0, 1 cross op op
    leak pip (OpA0 ^w32 OpB1);
    leak pip (OpB0 ^w32 OpA1);
 
    // Leak stages 0, 1 cross op target
-   leak pip (result0 ^w32 OpB1);
-   leak pip (result0 ^w32 OpA1);
-   leak pip (result1 ^w32 OpB0);
-   leak pip (result1 ^w32 OpA0);
+   leak pip (dst0 ^w32 OpB1);
+   leak pip (dst0 ^w32 OpA1);
+   leak pip (dst1 ^w32 OpB0);
+   leak pip (dst1 ^w32 OpA0);
 }
 
 macro is0_leak()
@@ -140,16 +140,14 @@ macro is0_leak()
 
 macro xor3_leak(w32 rd, w32 rs1, w32 rs2)
 {
-   leak_pipeline(rs1 ^w32 rs2, rs1, rs2);
+   leak_pipeline(rd, rs1, rs2);
    
-   leak resultTransition(rd, rs1 ^w32 rs2);
 }
 
 macro and3_leak(w32 rd, w32 rs1, w32 rs2)
 {
    
-   leak_pipeline(rs1 &w32 rs2, rs1, rs2);
-   leak resultTransition(rd, rs1 &w32 rs2);
+   leak_pipeline(rd, rs1, rs2);
 }
 
 macro nop0_leak()
@@ -169,14 +167,13 @@ macro ld3_leak(w32 dst, w32 adr, w32 ofs)
 {
    remnantVal <- [w32 mem (int) (adr +w32 ofs)];
    val <- [w32 mem (int) (adr +w32 ofs)];
-   leak_pipeline(val, adr, ofs);
+   leak_pipeline(dst, adr, ofs);
    leak_remnant_ld_ld(remnantVal, (w32) 1);
    leak_remnant_st_st(remnantVal, (w32) 1);
    leak_remnant_st_ld(remnantVal, (w32) 1);
    leak_remnant_ld_st(remnantVal, (w32) 1);
 
    
-   leak loadTransition(dst, val);
 }
 
 macro st3_leak(w32 dst, w32 adr, w32 ofs)
@@ -192,6 +189,5 @@ macro st3_leak(w32 dst, w32 adr, w32 ofs)
    leak_remnant_ld_st(remnantVal, (w32) 0);
 
    
-   leak storeTransition(dst, val);
 }
 

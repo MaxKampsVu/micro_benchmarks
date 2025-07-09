@@ -53,27 +53,25 @@ def gen_initState(remnant_parameters):
 
 
 def gen_xor():
-    pipeline_leak = "leak_pipeline(rs1 ^w32 rs2, rs1, rs2);" if LEAK_PIPELINE != 0 else ""
+    pipeline_leak = "leak_pipeline(rd, rs1, rs2);" if LEAK_PIPELINE != 0 else ""
     reg_overwrite_leak = "leak_register_overwrite(rd, rs1 ^w32 rs2);" if LEAK_REG_OVERWRITE else ""
     return (
         "macro xor3_leak(w32 rd, w32 rs1, w32 rs2)\n"
         "{\n"
         f"   {pipeline_leak}\n"
         f"   {reg_overwrite_leak}\n"
-        "   leak resultTransition(rd, rs1 ^w32 rs2);\n"
         "}\n"
     )
 
 
 def gen_and():
-    pipeline_leak = "leak_pipeline(rs1 &w32 rs2, rs1, rs2);" if LEAK_PIPELINE != 0 else ""
+    pipeline_leak = "leak_pipeline(rd, rs1, rs2);" if LEAK_PIPELINE != 0 else ""
     reg_overwrite_leak = "leak_register_overwrite(rd, rs1 &w32 rs2);" if LEAK_REG_OVERWRITE else ""
     return (
         "macro and3_leak(w32 rd, w32 rs1, w32 rs2)\n"
         "{\n"
         f"   {reg_overwrite_leak}\n"
         f"   {pipeline_leak}\n"
-        "   leak resultTransition(rd, rs1 &w32 rs2);\n"
         "}\n"
     )
 
@@ -100,7 +98,7 @@ def gen_mov():
 
 
 def gen_ld(remnant_parameters):
-    pipeline_leak = "leak_pipeline(val, adr, ofs);" if LEAK_PIPELINE else ""
+    pipeline_leak = "leak_pipeline(dst, adr, ofs);" if LEAK_PIPELINE else ""
     remnant_leak = f"{remnant_gen.ld_trigger_from_json(remnant_parameters)}" if LEAK_REMNANT else ""
     reg_overwrite_leak = "leak_register_overwrite(dst, val);" if LEAK_REG_OVERWRITE else ""
     return (
@@ -113,12 +111,9 @@ def gen_ld(remnant_parameters):
         f"   {pipeline_leak}\n"
         f"{remnant_leak}\n"
         f"   {reg_overwrite_leak}\n"
-        "   leak loadTransition(dst, val);\n"
         "}\n"
     )
 
-
-# TODO: st should leak the value stored into memory (not the previous value at the memory address)
 
 def gen_st(remnant_parameters):
     pipeline_leak = "leak_pipeline(dst, adr, ofs);" if LEAK_PIPELINE else ""
@@ -134,6 +129,5 @@ def gen_st(remnant_parameters):
         f"   {pipeline_leak}\n"
         f"   {remnant_leak}\n"
         f"   {sram_overwrite_leak}\n"
-        "   leak storeTransition(dst, val);\n"
         "}\n"
     )
