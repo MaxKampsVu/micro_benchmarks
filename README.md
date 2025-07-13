@@ -1,6 +1,6 @@
 # micro_benchmarks
 
-This repository provides a leakage modelling for detecting microarchitectural leakage in masked software via the [ScVerif](https://github.com/ScVerif) framework. 
+This repository provides leakage modelling for detecting microarchitectural leakage in masked software via the [ScVerif](https://github.com/ScVerif) framework. 
 
 ## Repository Structure
 
