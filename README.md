@@ -16,7 +16,7 @@ Additionally, this folder includes scripts to:
 
 Contains the infrastructure for performing microbenchmark-based leakage detection on ChipWhisperer-compatible devices. This includes:
 - Data capture routines using the ChipWhisperer API.
-- Correlation Power Analysis (CPA) scripts for identifying leakage
+- Correlation Power Analysis (CPA) scripts for identifying leakage.
 - Automation scripts for running benchmarks and collecting traces.
 
 ### `Sc_Verif_modelling/`
